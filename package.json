@@ -1,0 +1,67 @@
+{
+  "name": "@stakefi-labs/typescript-sdk",
+  "version": "2.0.0",
+  "description": "TypeScript client for the stakeFi Developer API, generated from the OpenAPI specification",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stakeFi-labs/typescript-sdk.git"
+  },
+  "homepage": "https://docs.stakefi.network/docs/sdks/typescript",
+  "keywords": [
+    "stakefi",
+    "staking",
+    "restaking",
+    "ethereum",
+    "solana",
+    "cosmos",
+    "openapi",
+    "sdk"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "openapi.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "prepare-spec": "node scripts/prepare-spec.mjs",
+    "generate": "pnpm run prepare-spec && pnpm run generate:code",
+    "generate:code": "rm -rf src && openapi-generator-cli generate",
+    "build": "pnpm run build:cjs && pnpm run build:esm",
+    "build:cjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json && node scripts/fix-esm.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:examples": "tsc -p tsconfig.examples.json",
+    "clean": "rm -rf dist",
+    "format": "prettier --write \"scripts/**/*.mjs\" \"examples/**/*.ts\"",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.15.3",
+    "@types/node": "^22.10.2",
+    "prettier": "^3.4.2",
+    "tsx": "^4.23.9",
+    "typescript": "^5.7.2"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

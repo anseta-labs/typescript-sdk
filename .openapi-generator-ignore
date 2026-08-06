@@ -1,0 +1,8 @@
+# Files owned by this repository, not by the generator.
+package.json
+tsconfig.json
+tsconfig.esm.json
+tsconfig.examples.json
+README.md
+.npmignore
+.gitignore

@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.10.0",
+    "generators": {
+      "typescript-fetch": {
+        "generatorName": "typescript-fetch",
+        "output": ".",
+        "inputSpec": "./openapi.json",
+        "additionalProperties": {
+          "npmName": "@stakefi-labs/typescript-sdk",
+          "npmVersion": "2.0.0",
+          "supportsES6": true,
+          "typescriptThreePlus": true,
+          "withInterfaces": true,
+          "withoutPrefixEnums": true,
+          "enumNameSuffix": "Enum"
+        }
+      }
+    }
+  }
+}
