@@ -1,7 +1,7 @@
 /**
  * Reads one address's stake with one validator.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/get-staking-position.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/get-staking-position.ts
  */
 import { SimpleStakingApi, StakingNetwork, StakingToken } from '../src';
 import { config } from './client';

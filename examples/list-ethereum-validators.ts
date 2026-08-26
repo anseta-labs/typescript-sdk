@@ -1,7 +1,7 @@
 /**
  * Lists the Ethereum validators provisioned under your account.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-ethereum-validators.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-ethereum-validators.ts
  */
 import { EthereumStakingApi, EthereumNetwork } from '../src';
 import { config } from './client';

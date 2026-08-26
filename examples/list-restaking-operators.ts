@@ -1,7 +1,7 @@
 /**
  * Lists the EigenLayer operators you can delegate to.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-restaking-operators.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-restaking-operators.ts
  */
 import { EigenlayerRestakingApi } from '../src';
 import { config } from './client';

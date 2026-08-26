@@ -1,7 +1,7 @@
 /**
  * Builds an unsigned unstake transaction.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/create-unstake.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/create-unstake.ts
  */
 import { SimpleStakingApi, SimplifiedStakeRequest, StakingNetwork, StakingToken } from '../src';
 import { config } from './client';

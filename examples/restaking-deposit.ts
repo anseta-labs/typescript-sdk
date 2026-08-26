@@ -1,7 +1,7 @@
 /**
  * Builds the approve and deposit transactions for an EigenLayer strategy.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/restaking-deposit.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/restaking-deposit.ts
  */
 import {
   EigenlayerRestakingApi,

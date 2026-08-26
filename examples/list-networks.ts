@@ -1,7 +1,7 @@
 /**
  * Lists every network the API knows about.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-networks.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-networks.ts
  */
 import { APIInfoApi } from '../src';
 import { config } from './client';

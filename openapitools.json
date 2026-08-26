@@ -9,7 +9,7 @@
         "output": ".",
         "inputSpec": "./openapi.json",
         "additionalProperties": {
-          "npmName": "@stakefi-labs/typescript-sdk",
+          "npmName": "@anseta/typescript-sdk",
           "npmVersion": "2.0.0",
           "supportsES6": true,
           "typescriptThreePlus": true,

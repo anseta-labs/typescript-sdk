@@ -1,7 +1,7 @@
 /**
  * Lists staking entities and the validators they run.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-entities.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-entities.ts
  */
 import { APIInfoApi } from '../src';
 import { config } from './client';

@@ -2,7 +2,7 @@
 /**
  * Writes openapi.json from a local file or URL.
  *
- * The source must be given explicitly, as an argument or via STAKEFI_SPEC.
+ * The source must be given explicitly, as an argument or via ANSETA_SPEC.
  * There is deliberately no default: the deployed spec lags the API repo, and
  * `pnpm run generate` deletes src/ before regenerating, so a silent fallback to
  * a stale host would quietly rebuild the client against an older API.
@@ -10,7 +10,7 @@
  * The base URL the generated client ships with is pinned here rather than read
  * out of the spec: the deployed spec's own `servers` list has pointed at hosts
  * that do not resolve, and typescript-fetch turns servers[0] into BASE_PATH.
- * Override with STAKEFI_BASE_URL when generating a client for another
+ * Override with ANSETA_BASE_URL when generating a client for another
  * environment.
  */
 import { readFile, writeFile } from 'node:fs/promises';
@@ -19,8 +19,8 @@ import { resolve } from 'node:path';
 const DEFAULT_BASE_URL = 'https://preview.api.stakefi.network';
 const OUTPUT = resolve(process.cwd(), 'openapi.json');
 
-const source = process.argv[2] ?? process.env.STAKEFI_SPEC;
-const baseUrl = process.env.STAKEFI_BASE_URL ?? DEFAULT_BASE_URL;
+const source = process.argv[2] ?? process.env.ANSETA_SPEC;
+const baseUrl = process.env.ANSETA_BASE_URL ?? DEFAULT_BASE_URL;
 
 async function load(from) {
   if (!from.startsWith('http://') && !from.startsWith('https://')) {
@@ -55,9 +55,9 @@ function parse(text, origin) {
 async function main() {
   if (!source) {
     throw new Error(
-      'No spec source given. Pass a path or URL as the first argument, or set STAKEFI_SPEC.\n' +
-        '  from the API repo:  STAKEFI_SPEC=../stakefi-developer-api/openapi.json pnpm run generate\n' +
-        '  from a deployment:  STAKEFI_SPEC=https://preview.api.stakefi.network/v1/openapi.json pnpm run generate',
+      'No spec source given. Pass a path or URL as the first argument, or set ANSETA_SPEC.\n' +
+        '  from the API repo:  ANSETA_SPEC=../stakefi-developer-api/openapi.json pnpm run generate\n' +
+        '  from a deployment:  ANSETA_SPEC=https://preview.api.stakefi.network/v1/openapi.json pnpm run generate',
     );
   }
 
@@ -75,7 +75,7 @@ async function main() {
     throw new Error(`${source} has no info.version`);
   }
 
-  spec.servers = [{ url: baseUrl, description: 'stakeFi Developer API' }];
+  spec.servers = [{ url: baseUrl, description: 'Anseta Developer API' }];
 
   await writeFile(OUTPUT, `${JSON.stringify(spec, null, 2)}\n`);
 

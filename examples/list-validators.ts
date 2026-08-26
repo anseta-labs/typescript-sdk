@@ -1,7 +1,7 @@
 /**
  * Lists the validators available on one network.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-validators.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-validators.ts
  */
 import { SimpleStakingApi, StakingNetwork } from '../src';
 import { config } from './client';

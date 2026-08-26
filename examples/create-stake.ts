@@ -1,7 +1,7 @@
 /**
  * Builds an unsigned stake transaction. You sign and broadcast it yourself.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/create-stake.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/create-stake.ts
  */
 import { SimpleStakingApi, SimplifiedStakeRequest, StakingNetwork, StakingToken } from '../src';
 import { config } from './client';

@@ -2,7 +2,7 @@
  * Provisions an Ethereum validator and returns the deposit transaction to sign.
  * Running this against mainnet commits 32 ETH.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/provision-ethereum-validator.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/provision-ethereum-validator.ts
  */
 import { EthereumStakingApi, EthereumNetwork, EthereumStakeRequest } from '../src';
 import { config } from './client';

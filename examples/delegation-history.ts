@@ -1,7 +1,7 @@
 /**
  * Reads a validator's delegation and undelegation events.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/delegation-history.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/delegation-history.ts
  */
 import { SimpleStakingApi } from '../src';
 import { config } from './client';

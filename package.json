@@ -1,15 +1,15 @@
 {
-  "name": "@stakefi-labs/typescript-sdk",
+  "name": "@anseta/typescript-sdk",
   "version": "2.0.0",
-  "description": "TypeScript client for the stakeFi Developer API, generated from the OpenAPI specification",
+  "description": "TypeScript client for the Anseta Developer API, generated from the OpenAPI specification",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stakeFi-labs/typescript-sdk.git"
+    "url": "git+https://github.com/stakeFi-labs/anseta-typescript-sdk.git"
   },
   "homepage": "https://docs.stakefi.network/docs/sdks/typescript",
   "keywords": [
-    "stakefi",
+    "anseta",
     "staking",
     "restaking",
     "ethereum",

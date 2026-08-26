@@ -1,7 +1,7 @@
 /**
  * Lists the tokens available on one network.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/list-tokens.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/list-tokens.ts
  */
 import { APIInfoApi, StakingNetwork } from '../src';
 import { config } from './client';

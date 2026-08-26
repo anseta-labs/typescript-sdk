@@ -1,15 +1,15 @@
-# stakeFi TypeScript SDK
+# Anseta TypeScript SDK
 
-Type-safe TypeScript/JavaScript client for the [stakeFi Developer API](https://docs.stakefi.network).
+Type-safe TypeScript/JavaScript client for the [Anseta Developer API](https://docs.stakefi.network).
 
 The code in `src/` is generated from the API's OpenAPI 3.1 specification with [OpenAPI Generator](https://openapi-generator.tech) (`typescript-fetch`). Do not edit it by hand: change the API spec and re-run `pnpm run generate`.
 
 ## Install
 
 ```bash
-npm install @stakefi-labs/typescript-sdk
+npm install @anseta/typescript-sdk
 # or
-pnpm add @stakefi-labs/typescript-sdk
+pnpm add @anseta/typescript-sdk
 ```
 
 Requires Node.js 18 or newer (uses the global `fetch`). In older Node versions pass your own fetch implementation through `Configuration.fetchApi`.
@@ -19,11 +19,11 @@ Requires Node.js 18 or newer (uses the global `fetch`). In older Node versions p
 The API takes an API key in the `x-api-key` header. Set `apiKey` on the `Configuration` and every request gets the header:
 
 ```typescript
-import { Configuration } from '@stakefi-labs/typescript-sdk';
+import { Configuration } from '@anseta/typescript-sdk';
 
 const config = new Configuration({
   basePath: 'https://preview.api.stakefi.network',
-  apiKey: process.env.STAKEFI_API_KEY!,
+  apiKey: process.env.ANSETA_API_KEY!,
 });
 ```
 
@@ -31,7 +31,7 @@ Passing it as a default header instead works the same way and is useful when you
 
 ```typescript
 const config = new Configuration({
-  headers: { 'x-api-key': process.env.STAKEFI_API_KEY! },
+  headers: { 'x-api-key': process.env.ANSETA_API_KEY! },
 });
 ```
 
@@ -47,10 +47,10 @@ import {
   SimplifiedStakeRequest,
   StakingNetwork,
   StakingToken,
-} from '@stakefi-labs/typescript-sdk';
+} from '@anseta/typescript-sdk';
 
 const config = new Configuration({
-  apiKey: process.env.STAKEFI_API_KEY!,
+  apiKey: process.env.ANSETA_API_KEY!,
 });
 
 const infoApi = new APIInfoApi(config);
@@ -127,7 +127,7 @@ These are `as const` objects plus string-literal union types, not TypeScript `en
 A non-2xx response throws a `ResponseError` carrying the raw `Response`:
 
 ```typescript
-import { ResponseError, StakingNetwork } from '@stakefi-labs/typescript-sdk';
+import { ResponseError, StakingNetwork } from '@anseta/typescript-sdk';
 
 try {
   await stakingApi.getValidators({ network: StakingNetwork.Mantra });
@@ -144,17 +144,17 @@ try {
 
 ## Examples
 
-Runnable scripts live in `examples/`. Each one makes a single API call, with the addresses, validator IDs, amounts, and dates as plain constants at the top for you to edit. `STAKEFI_API_KEY` is required; `STAKEFI_BASE_URL` is optional and defaults to the preview host.
+Runnable scripts live in `examples/`. Each one makes a single API call, with the addresses, validator IDs, amounts, and dates as plain constants at the top for you to edit. `ANSETA_API_KEY` is required; `ANSETA_BASE_URL` is optional and defaults to the preview host.
 
 ```bash
-STAKEFI_API_KEY=... npx tsx examples/list-networks.ts
+ANSETA_API_KEY=... npx tsx examples/list-networks.ts
 
 # against a local API instead of the default preview host
-STAKEFI_API_KEY=... STAKEFI_BASE_URL=http://localhost:8081 \
+ANSETA_API_KEY=... ANSETA_BASE_URL=http://localhost:8081 \
   npx tsx examples/list-networks.ts
 ```
 
-The addresses and IDs are real values from the stakeFi validator set, so the scripts run as-is.
+The addresses and IDs are real values from the Anseta validator set, so the scripts run as-is.
 
 | File | Calls |
 |------|-------|
@@ -182,17 +182,17 @@ The addresses and IDs are real values from the stakeFi validator set, so the scr
 pnpm install
 
 # From the API repo's spec, which is what you normally want
-STAKEFI_SPEC=../stakefi-developer-api/openapi.json pnpm run generate
+ANSETA_SPEC=../stakefi-developer-api/openapi.json pnpm run generate
 
 # Or from a deployment
-STAKEFI_SPEC=https://preview.api.stakefi.network/v1/openapi.json pnpm run generate
+ANSETA_SPEC=https://preview.api.stakefi.network/v1/openapi.json pnpm run generate
 
 pnpm run build
 ```
 
 There is no default spec source and `pnpm run generate` fails without one. That is deliberate: the deployed spec lags the API repo, and `generate` deletes `src/` before regenerating, so a silent fallback would quietly rebuild the client against an older API.
 
-`scripts/prepare-spec.mjs` writes `openapi.json` and pins `servers[0]` to `https://preview.api.stakefi.network`, which is what the generator turns into the default base path. The base URL is pinned here rather than read from the upstream spec, whose own server list has advertised hosts that do not resolve. Override it with `STAKEFI_BASE_URL`.
+`scripts/prepare-spec.mjs` writes `openapi.json` and pins `servers[0]` to `https://preview.api.stakefi.network`, which is what the generator turns into the default base path. The base URL is pinned here rather than read from the upstream spec, whose own server list has advertised hosts that do not resolve. Override it with `ANSETA_BASE_URL`.
 
 `pnpm run generate:code` regenerates from whatever `openapi.json` is already on disk, without fetching.
 
@@ -204,7 +204,7 @@ Requires a JDK on `PATH` (the generator runs as a jar).
 
 | Script | Does |
 |--------|------|
-| `pnpm run generate` | Fetch the spec (`STAKEFI_SPEC`) and regenerate `src/` |
+| `pnpm run generate` | Fetch the spec (`ANSETA_SPEC`) and regenerate `src/` |
 | `pnpm run generate:code` | Regenerate `src/` from the existing `openapi.json` |
 | `pnpm run build` | Compile CommonJS to `dist/` and ESM to `dist/esm/` |
 | `pnpm run typecheck` | Type-check `src/` without emitting |

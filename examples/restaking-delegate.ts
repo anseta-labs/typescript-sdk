@@ -1,7 +1,7 @@
 /**
  * Delegates already deposited assets to an EigenLayer operator.
  *
- * Run with: STAKEFI_API_KEY=... npx tsx examples/restaking-delegate.ts
+ * Run with: ANSETA_API_KEY=... npx tsx examples/restaking-delegate.ts
  */
 import { EigenlayerRestakingApi, RestakingDelegateRequest, RestakingNetwork } from '../src';
 import { config } from './client';
