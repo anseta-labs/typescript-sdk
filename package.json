@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stakeFi-labs/anseta-typescript-sdk.git"
+    "url": "git+https://github.com/anseta-labs/typescript-sdk.git"
   },
   "homepage": "https://docs.stakefi.network/docs/sdks/typescript",
   "keywords": [
