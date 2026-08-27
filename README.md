@@ -1,5 +1,9 @@
 # Anseta TypeScript SDK
 
+[![CI](https://github.com/anseta-labs/typescript-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/anseta-labs/typescript-sdk/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@anseta/typescript-sdk.svg)](https://www.npmjs.com/package/@anseta/typescript-sdk)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 Type-safe TypeScript/JavaScript client for the [Anseta Developer API](https://docs.stakefi.network).
 
 The code in `src/` is generated from the API's OpenAPI 3.1 specification with [OpenAPI Generator](https://openapi-generator.tech) (`typescript-fetch`). Do not edit it by hand: change the API spec and re-run `pnpm run generate`.
