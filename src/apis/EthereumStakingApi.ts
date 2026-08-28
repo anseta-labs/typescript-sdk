@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -20,6 +20,8 @@ import type {
   EthereumCancelStakeRequest,
   EthereumConfirmStake200Response,
   EthereumConfirmStakeRequest,
+  EthereumConsolidate200Response,
+  EthereumConsolidateRequest,
   EthereumExit202Response,
   EthereumExitRequest,
   EthereumForceExit200Response,
@@ -30,6 +32,8 @@ import type {
   EthereumNetwork,
   EthereumStake200Response,
   EthereumStakeRequest,
+  EthereumTopup200Response,
+  EthereumTopupRequest,
   EthereumWithdraw200Response,
   EthereumWithdrawRequest,
 } from '../models/index';
@@ -44,6 +48,10 @@ import {
     EthereumConfirmStake200ResponseToJSON,
     EthereumConfirmStakeRequestFromJSON,
     EthereumConfirmStakeRequestToJSON,
+    EthereumConsolidate200ResponseFromJSON,
+    EthereumConsolidate200ResponseToJSON,
+    EthereumConsolidateRequestFromJSON,
+    EthereumConsolidateRequestToJSON,
     EthereumExit202ResponseFromJSON,
     EthereumExit202ResponseToJSON,
     EthereumExitRequestFromJSON,
@@ -64,6 +72,10 @@ import {
     EthereumStake200ResponseToJSON,
     EthereumStakeRequestFromJSON,
     EthereumStakeRequestToJSON,
+    EthereumTopup200ResponseFromJSON,
+    EthereumTopup200ResponseToJSON,
+    EthereumTopupRequestFromJSON,
+    EthereumTopupRequestToJSON,
     EthereumWithdraw200ResponseFromJSON,
     EthereumWithdraw200ResponseToJSON,
     EthereumWithdrawRequestFromJSON,
@@ -76,6 +88,10 @@ export interface EthereumCancelStakeOperationRequest {
 
 export interface EthereumConfirmStakeOperationRequest {
     ethereumConfirmStakeRequest: EthereumConfirmStakeRequest;
+}
+
+export interface EthereumConsolidateOperationRequest {
+    ethereumConsolidateRequest?: EthereumConsolidateRequest;
 }
 
 export interface EthereumExitOperationRequest {
@@ -113,6 +129,10 @@ export interface EthereumGetValidatorsRequest {
 export interface EthereumStakeOperationRequest {
     ethereumStakeRequest: EthereumStakeRequest;
     idempotencyKey?: string;
+}
+
+export interface EthereumTopupOperationRequest {
+    ethereumTopupRequest?: EthereumTopupRequest;
 }
 
 export interface EthereumWithdrawOperationRequest {
@@ -157,6 +177,22 @@ export interface EthereumStakingApiInterface {
      * Confirm Stake
      */
     ethereumConfirmStake(requestParameters: EthereumConfirmStakeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumConfirmStake200Response>;
+
+    /**
+     * Build an unsigned EIP-7251 consolidation request transaction that moves the source validator\'s balance into the target validator and exits the source. Both validators must share the same withdrawal address. Signed by the withdrawal address (msg.sender check on the EIP-7251 predeploy).
+     * @summary Transfer Stake (\"Consolidate\")
+     * @param {EthereumConsolidateRequest} [ethereumConsolidateRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EthereumStakingApiInterface
+     */
+    ethereumConsolidateRaw(requestParameters: EthereumConsolidateOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumConsolidate200Response>>;
+
+    /**
+     * Build an unsigned EIP-7251 consolidation request transaction that moves the source validator\'s balance into the target validator and exits the source. Both validators must share the same withdrawal address. Signed by the withdrawal address (msg.sender check on the EIP-7251 predeploy).
+     * Transfer Stake (\"Consolidate\")
+     */
+    ethereumConsolidate(requestParameters: EthereumConsolidateOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumConsolidate200Response>;
 
     /**
      * Fully exits a validator. The operator holds the validator\'s signing key and uses it to submit the exit request to the network.  This endpoint only does full exits. To take out part of the balance and keep the validator running, use `POST /v1/ethereum-staking/withdraw`. For a full exit the withdrawal address can submit on its own without this API, use `POST /v1/ethereum-staking/force-exit`.  A validator can only exit after it has been active for about 27 hours (256 epochs). The response includes `accepted` and an `exitEpoch`. The `exitEpoch` stays null until the network schedules the exit.
@@ -268,6 +304,22 @@ export interface EthereumStakingApiInterface {
     ethereumStake(requestParameters: EthereumStakeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumStake200Response>;
 
     /**
+     * Build an unsigned deposit-contract transaction that adds balance to an existing 0x02 (compounding) validator, reusing its pubkey and withdrawal credentials. Useful for pushing balance toward the 2048 ETH cap without provisioning a new validator.
+     * @summary Add Stake (\"Topup\")
+     * @param {EthereumTopupRequest} [ethereumTopupRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EthereumStakingApiInterface
+     */
+    ethereumTopupRaw(requestParameters: EthereumTopupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumTopup200Response>>;
+
+    /**
+     * Build an unsigned deposit-contract transaction that adds balance to an existing 0x02 (compounding) validator, reusing its pubkey and withdrawal credentials. Useful for pushing balance toward the 2048 ETH cap without provisioning a new validator.
+     * Add Stake (\"Topup\")
+     */
+    ethereumTopup(requestParameters: EthereumTopupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumTopup200Response>;
+
+    /**
      * Returns an unsigned EIP-7002 partial-withdrawal transaction for the withdrawal address to sign and broadcast. The validator stays active and keeps attesting.  A partial withdrawal is a standard on-chain request that the withdrawal address can build and send on its own, without this API. This endpoint is a convenience that assembles that transaction so it does not have to be built by hand.  `amountWei` must be a whole-gwei multiple of at least 1 gwei, and the remaining balance must stay above 32 ETH. For a full exit, use `POST /v1/ethereum-staking/exit` or `POST /v1/ethereum-staking/force-exit`.  A validator must have been active for at least 256 epochs (about 27 hours) before a withdrawal request is accepted.
      * @summary Withdrawal (trustless)
      * @param {EthereumWithdrawRequest} ethereumWithdrawRequest 
@@ -371,6 +423,41 @@ export class EthereumStakingApi extends runtime.BaseAPI implements EthereumStaki
      */
     async ethereumConfirmStake(requestParameters: EthereumConfirmStakeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumConfirmStake200Response> {
         const response = await this.ethereumConfirmStakeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Build an unsigned EIP-7251 consolidation request transaction that moves the source validator\'s balance into the target validator and exits the source. Both validators must share the same withdrawal address. Signed by the withdrawal address (msg.sender check on the EIP-7251 predeploy).
+     * Transfer Stake (\"Consolidate\")
+     */
+    async ethereumConsolidateRaw(requestParameters: EthereumConsolidateOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumConsolidate200Response>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/ethereum-staking/consolidate`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EthereumConsolidateRequestToJSON(requestParameters['ethereumConsolidateRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EthereumConsolidate200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Build an unsigned EIP-7251 consolidation request transaction that moves the source validator\'s balance into the target validator and exits the source. Both validators must share the same withdrawal address. Signed by the withdrawal address (msg.sender check on the EIP-7251 predeploy).
+     * Transfer Stake (\"Consolidate\")
+     */
+    async ethereumConsolidate(requestParameters: EthereumConsolidateOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumConsolidate200Response> {
+        const response = await this.ethereumConsolidateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -684,6 +771,41 @@ export class EthereumStakingApi extends runtime.BaseAPI implements EthereumStaki
      */
     async ethereumStake(requestParameters: EthereumStakeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumStake200Response> {
         const response = await this.ethereumStakeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Build an unsigned deposit-contract transaction that adds balance to an existing 0x02 (compounding) validator, reusing its pubkey and withdrawal credentials. Useful for pushing balance toward the 2048 ETH cap without provisioning a new validator.
+     * Add Stake (\"Topup\")
+     */
+    async ethereumTopupRaw(requestParameters: EthereumTopupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumTopup200Response>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/ethereum-staking/topup`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EthereumTopupRequestToJSON(requestParameters['ethereumTopupRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EthereumTopup200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Build an unsigned deposit-contract transaction that adds balance to an existing 0x02 (compounding) validator, reusing its pubkey and withdrawal credentials. Useful for pushing balance toward the 2048 ETH cap without provisioning a new validator.
+     * Add Stake (\"Topup\")
+     */
+    async ethereumTopup(requestParameters: EthereumTopupOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumTopup200Response> {
+        const response = await this.ethereumTopupRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

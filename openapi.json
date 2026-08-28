@@ -2,13 +2,13 @@
   "openapi": "3.0.3",
   "info": {
     "version": "2.0.0",
-    "title": "stakeFi Developer API",
-    "description": "API for creating unsigned staking transactions across multiple blockchain networks"
+    "title": "Anseta Developer API",
+    "description": "Unified API for blockchain staking operations across multiple networks."
   },
   "servers": [
     {
       "url": "https://preview.api.stakefi.network",
-      "description": "stakeFi Developer API"
+      "description": "Anseta Developer API"
     }
   ],
   "security": [
@@ -147,6 +147,12 @@
             "description": "Protocol effective balance in wei. Null when beacon hasn't seen the validator yet.",
             "example": "32000000000000000000"
           },
+          "pendingDepositWei": {
+            "type": "string",
+            "nullable": true,
+            "description": "Deposited but not yet credited, in wei — sits in the consensus layer's pending_deposits queue. Null when there is nothing queued. Do not sum with balanceWei.",
+            "example": "1000000000000000000"
+          },
           "state": {
             "type": "string",
             "enum": [
@@ -222,6 +228,7 @@
           "feeRecipient",
           "balanceWei",
           "effectiveBalanceWei",
+          "pendingDepositWei",
           "state",
           "consensusLayerState",
           "indexerState",
@@ -239,7 +246,9 @@
             "enum": [
               "deposit",
               "withdraw",
-              "force-exit"
+              "force-exit",
+              "consolidate",
+              "topup"
             ],
             "description": "Operation type",
             "example": "deposit"
@@ -568,7 +577,7 @@
           "zenrock-testnet"
         ],
         "example": "mantra",
-        "description": "The blockchain network to query"
+        "description": "The blockchain network"
       },
       "StakingToken": {
         "type": "string",
@@ -588,7 +597,113 @@
           "HBAR"
         ],
         "example": "MANTRA",
-        "description": "The token to query stakes for"
+        "description": "The staked token symbol"
+      },
+      "Stake": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "$ref": "#/components/schemas/StakingNetwork"
+          },
+          "token": {
+            "$ref": "#/components/schemas/StakingToken"
+          },
+          "tokenAddress": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "nullable": true
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The token contract address (null for native tokens, address for ERC20/SPL tokens)"
+          },
+          "stakerAddress": {
+            "type": "string",
+            "description": "The address that owns the stake"
+          },
+          "validatorAddress": {
+            "type": "string",
+            "description": "The validator address (if applicable)"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Amount staked in smallest unit of the asset"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "staked",
+              "unstaking",
+              "unstaked"
+            ],
+            "description": "Current status of the stake"
+          },
+          "unstakingCompletionDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO 8601 date when unstaking will complete (if unstaking/deactivating)"
+          },
+          "rewards": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Accumulated rewards (if available)"
+          }
+        },
+        "required": [
+          "network",
+          "token",
+          "stakerAddress",
+          "amount",
+          "status"
+        ],
+        "description": "Information about a stake or delegation on a blockchain network. Status meanings: 'staked' = actively staking/earning rewards, 'unstaking' = unbonding period in progress, 'unstaked' = unstaking complete and ready to withdraw",
+        "example": {
+          "network": "mantra",
+          "token": "MANTRA",
+          "tokenAddress": null,
+          "stakerAddress": "mantra1abc...",
+          "validatorAddress": "mantravaloper1xyz...",
+          "amount": "4000000000000000000",
+          "status": "unstaking",
+          "unstakingCompletionDate": "2025-12-01T15:30:00Z",
+          "rewards": "200000000000000000"
+        }
+      },
+      "GetStakesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "stakes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Stake"
+                },
+                "description": "Staking positions for the address"
+              }
+            },
+            "required": [
+              "stakes"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiError"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "description": "Staking positions for the address"
       },
       "Transaction": {
         "type": "object",
@@ -765,7 +880,7 @@
           "ethereum-hoodi-testnet"
         ],
         "example": "ethereum",
-        "description": "The blockchain network to query"
+        "description": "The blockchain network"
       },
       "RestakingToken": {
         "type": "string",
@@ -777,7 +892,107 @@
           "RETH"
         ],
         "example": "STETH",
-        "description": "The token to filter restaking stakes for"
+        "description": "The restaked token symbol"
+      },
+      "RestakingStake": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "$ref": "#/components/schemas/RestakingNetwork"
+          },
+          "token": {
+            "$ref": "#/components/schemas/RestakingToken"
+          },
+          "tokenAddress": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "nullable": true
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The token contract address"
+          },
+          "stakerAddress": {
+            "type": "string",
+            "description": "The address that owns the restaked position"
+          },
+          "operatorAddress": {
+            "type": "string",
+            "description": "The EigenLayer operator address (if delegated)"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Amount restaked in smallest unit of the asset"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "staked",
+              "unstaking",
+              "unstaked"
+            ],
+            "description": "Current status of the restaked position"
+          },
+          "unstakingCompletionDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO 8601 date when unstaking will complete (if unstaking/deactivating)"
+          }
+        },
+        "required": [
+          "network",
+          "token",
+          "stakerAddress",
+          "amount",
+          "status"
+        ],
+        "description": "Information about a restaked position on EigenLayer. Status meanings: 'staked' = actively restaked, 'unstaking' = withdrawal queued and in cooldown, 'unstaked' = withdrawal ready to complete",
+        "example": {
+          "network": "ethereum",
+          "token": "EIGEN",
+          "tokenAddress": "0xec53bF9167f50cDEB3Ae105f56099aaaB9061F83",
+          "stakerAddress": "0x1234567890abcdef1234567890abcdef12345678",
+          "operatorAddress": "0xabcdef1234567890abcdef1234567890abcdef12",
+          "amount": "500000000000000000000",
+          "status": "unstaking",
+          "unstakingCompletionDate": "2025-12-08T15:30:00Z"
+        }
+      },
+      "GetRestakingStakesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "stakes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RestakingStake"
+                },
+                "description": "Restaking positions for the address"
+              }
+            },
+            "required": [
+              "stakes"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiError"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "description": "Restaking positions for the address"
       },
       "RestakingDepositRequest": {
         "type": "object",
@@ -1146,12 +1361,12 @@
         ],
         "description": "List of staking options"
       },
-      "EntityValidator": {
+      "Validator": {
         "type": "object",
         "properties": {
           "validatorId": {
             "type": "string",
-            "description": "Validator identifier"
+            "description": "Validator identifier (UUID)"
           },
           "validatorAddress": {
             "type": "string",
@@ -1242,7 +1457,7 @@
           "status",
           "network"
         ],
-        "description": "Validator within an entity"
+        "description": "A validator available for delegation. validatorId is a UUID and is not the same value as validatorAddress; the history and rewards endpoints take the UUID."
       },
       "Entity": {
         "type": "object",
@@ -1270,7 +1485,7 @@
           "validators": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EntityValidator"
+              "$ref": "#/components/schemas/Validator"
             },
             "description": "Validators operated by this entity"
           }
@@ -1309,6 +1524,137 @@
           "count"
         ],
         "description": "List of entities"
+      },
+      "GetValidatorsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Validator"
+            }
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiError"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "description": "List of validators"
+      },
+      "Operator": {
+        "type": "object",
+        "properties": {
+          "operatorId": {
+            "type": "string",
+            "description": "Operator identifier (UUID)"
+          },
+          "operatorAddress": {
+            "type": "string",
+            "description": "Operator address"
+          },
+          "moniker": {
+            "type": "string",
+            "description": "Operator display name"
+          },
+          "status": {
+            "type": "string",
+            "description": "Operator status"
+          },
+          "protocol": {
+            "type": "object",
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "description": "Restaking protocol identifier"
+              },
+              "network": {
+                "type": "string",
+                "description": "Network identifier"
+              }
+            },
+            "required": [
+              "protocol",
+              "network"
+            ],
+            "description": "Protocol and network the operator runs on"
+          },
+          "commissionRate": {
+            "type": "string"
+          },
+          "publicDelegationEnabled": {
+            "type": "boolean"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "serviceId": {
+                  "type": "number",
+                  "description": "Service identifier"
+                },
+                "serviceAddress": {
+                  "type": "string",
+                  "description": "Service contract address"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Service name"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Service status"
+                },
+                "commissionRate": {
+                  "type": "string",
+                  "description": "Commission rate for this service"
+                }
+              },
+              "required": [
+                "serviceId",
+                "serviceAddress",
+                "name",
+                "status",
+                "commissionRate"
+              ]
+            },
+            "description": "Services this operator secures"
+          }
+        },
+        "required": [
+          "operatorId",
+          "operatorAddress",
+          "moniker",
+          "status",
+          "protocol"
+        ],
+        "description": "A restaking operator available for delegation. operatorId is a UUID and is not the same value as operatorAddress; the history and rewards endpoints take the UUID."
+      },
+      "GetOperatorsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Operator"
+            }
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiError"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "description": "List of restaking operators"
       },
       "DelegationHistoryItem": {
         "type": "object",
@@ -1806,6 +2152,78 @@
           "network",
           "validatorPublicKey"
         ]
+      },
+      "EthereumTopupResponse": {
+        "type": "object",
+        "properties": {
+          "topupTransaction": {
+            "$ref": "#/components/schemas/EthereumTransaction"
+          }
+        },
+        "required": [
+          "topupTransaction"
+        ]
+      },
+      "EthereumTopupRequest": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "$ref": "#/components/schemas/EthereumNetwork"
+          },
+          "validatorPublicKey": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{96}$",
+            "description": "Pubkey of the existing 0x02 validator to top up. Withdrawal credentials and fee recipient are reused.",
+            "example": "0x8b9c7e5f4a3d2c1e6b5a9f8e7d4c3b2a1e0f9d8c7b6a5e4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8e7d6c5b4a3f2e1d0c"
+          },
+          "amountWei": {
+            "type": "string",
+            "pattern": "^[1-9]\\d*$",
+            "description": "Amount to deposit in wei. Must be between 1 and 2048 ETH",
+            "example": "32000000000000000000"
+          }
+        },
+        "required": [
+          "network",
+          "validatorPublicKey",
+          "amountWei"
+        ]
+      },
+      "EthereumConsolidateResponse": {
+        "type": "object",
+        "properties": {
+          "consolidationTransaction": {
+            "$ref": "#/components/schemas/EthereumTransaction"
+          }
+        },
+        "required": [
+          "consolidationTransaction"
+        ]
+      },
+      "EthereumConsolidateRequest": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "$ref": "#/components/schemas/EthereumNetwork"
+          },
+          "sourceValidatorPublicKey": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{96}$",
+            "description": "Pubkey of the validator being consolidated. Its balance is moved to the target and it exits.",
+            "example": "0x8b9c7e5f4a3d2c1e6b5a9f8e7d4c3b2a1e0f9d8c7b6a5e4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8e7d6c5b4a3f2e1d0c"
+          },
+          "targetValidatorPublicKey": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{96}$",
+            "description": "Pubkey of the 0x02 validator that will receive the consolidated balance. Must share the same withdrawal address as source.",
+            "example": "0x8b9c7e5f4a3d2c1e6b5a9f8e7d4c3b2a1e0f9d8c7b6a5e4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8e7d6c5b4a3f2e1d0c"
+          }
+        },
+        "required": [
+          "network",
+          "sourceValidatorPublicKey",
+          "targetValidatorPublicKey"
+        ]
       }
     },
     "parameters": {}
@@ -1954,7 +2372,14 @@
           },
           {
             "schema": {
-              "$ref": "#/components/schemas/StakingNetwork"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StakingNetwork"
+                },
+                {
+                  "description": "The blockchain network to query"
+                }
+              ]
             },
             "required": true,
             "description": "The blockchain network to query",
@@ -1973,7 +2398,14 @@
           },
           {
             "schema": {
-              "$ref": "#/components/schemas/StakingToken"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StakingToken"
+                },
+                {
+                  "description": "The token to query stakes for"
+                }
+              ]
             },
             "required": true,
             "description": "The token to query stakes for",
@@ -1987,18 +2419,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "nullable": true
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
+                  "$ref": "#/components/schemas/GetStakesResponse"
                 }
               }
             }
@@ -2244,7 +2665,7 @@
                                     "value": "CoExbWFudHJhMTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2EkVtYW50cmF2YWxvcGVyMTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2Gg8KAm9tEgkxMDAwMDAw"
                                   }
                                 ],
-                                "memo": "Delegating 1000000000000000000 amantra to mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with stakeFi's developer API",
+                                "memo": "Delegating 1000000000000000000 amantra to mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with Anseta's developer API",
                                 "timeoutHeight": "0",
                                 "extensionOptions": [],
                                 "nonCriticalExtensionOptions": []
@@ -2276,7 +2697,7 @@
                                     "value": "CoJuaWxsMTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2EkduaWxsdmFsb3BlcjEyMzQ1Njc4OTBhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1NhoPCgRuaWxsEgcxMDAwMDAw"
                                   }
                                 ],
-                                "memo": "Delegating NILL tokens with stakeFi's developer API",
+                                "memo": "Delegating NILL tokens with Anseta's developer API",
                                 "timeoutHeight": "0",
                                 "extensionOptions": [],
                                 "nonCriticalExtensionOptions": []
@@ -2505,7 +2926,7 @@
                                     "value": "Cit6ZW4xMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYSOHplbnZhbG9wZXIxbHk5bDNyaDUwOTJsMGpwNGtjNXBhdjR4NTgwMjU4NXp2OHo5N2MaDQoFdXJvY2sSBDEwMDA="
                                   }
                                 ],
-                                "memo": "Delegating ROCK tokens with stakeFi's developer API",
+                                "memo": "Delegating ROCK tokens with Anseta's developer API",
                                 "timeoutHeight": "0",
                                 "extensionOptions": [],
                                 "nonCriticalExtensionOptions": []
@@ -2605,7 +3026,14 @@
           },
           {
             "schema": {
-              "$ref": "#/components/schemas/RestakingNetwork"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/RestakingNetwork"
+                },
+                {
+                  "description": "The blockchain network to query"
+                }
+              ]
             },
             "required": true,
             "description": "The blockchain network to query",
@@ -2625,10 +3053,17 @@
           },
           {
             "schema": {
-              "$ref": "#/components/schemas/RestakingToken"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/RestakingToken"
+                },
+                {
+                  "description": "Optional token filter. Omit to return the staker's positions across every restaked token."
+                }
+              ]
             },
-            "required": true,
-            "description": "The token to filter restaking stakes for",
+            "required": false,
+            "description": "Optional token filter. Omit to return the staker's positions across every restaked token.",
             "name": "token",
             "in": "query"
           }
@@ -2639,18 +3074,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "nullable": true
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
+                  "$ref": "#/components/schemas/GetRestakingStakesResponse"
                 }
               }
             }
@@ -3625,7 +4049,7 @@
                                     "value": "Cit6ZW4xMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYSOHplbnZhbG9wZXIxbHk5bDNyaDUwOTJsMGpwNGtjNXBhdjR4NTgwMjU4NXp2OHo5N2MaDQoFdXJvY2sSBDEwMDA="
                                   }
                                 ],
-                                "memo": "Undelegating ROCK tokens with stakeFi's developer API",
+                                "memo": "Undelegating ROCK tokens with Anseta's developer API",
                                 "timeoutHeight": "0",
                                 "extensionOptions": [],
                                 "nonCriticalExtensionOptions": []
@@ -3839,7 +4263,7 @@
                                   "value": "CjBtYW50cmExMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYSN21hbnRyYXZhbG9wZXIxMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYaEQoGbWFudHJhEgcxMDAwMDAw"
                                 }
                               ],
-                              "memo": "Undelegating 1000000000000000000 amantra from mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with stakeFi's developer API",
+                              "memo": "Undelegating 1000000000000000000 amantra from mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with Anseta's developer API",
                               "timeoutHeight": "0",
                               "extensionOptions": [],
                               "nonCriticalExtensionOptions": []
@@ -3869,7 +4293,7 @@
                                   "value": "CjFuaWxsaW9uMTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2EjhuaWxsaW9udmFsb3BlcjEyMzQ1Njc4OTBhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1NhoSCgduaWxsaW9uEgcxMDAwMDAw"
                                 }
                               ],
-                              "memo": "Undelegating 1000000 nillion from nillionvaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with stakeFi's developer API",
+                              "memo": "Undelegating 1000000 nillion from nillionvaloper1234567890abcdefghijklmnopqrstuvwxyz123456 with Anseta's developer API",
                               "timeoutHeight": "0",
                               "extensionOptions": [],
                               "nonCriticalExtensionOptions": []
@@ -4448,22 +4872,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "nullable": true
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "$ref": "#/components/schemas/GetValidatorsResponse"
                 }
               }
             }
@@ -4495,22 +4904,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "nullable": true
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "$ref": "#/components/schemas/GetOperatorsResponse"
                 }
               }
             }
@@ -4580,7 +4974,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "delegatorAddress": "mantra1za8emt4vze4c9ssm2m75tzf0eve8qajnhdqtme",
                           "eventType": "delegate",
                           "amount": "47034614",
@@ -4656,7 +5050,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "delegatorAddress": "mantra1lqt62re8vxvpl62a8llurpq393y470vwj34ue4",
                           "amount": "234411",
                           "amountFormatted": "0.234411",
@@ -4747,7 +5141,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "date": "2025-09-30T00:00:00.000Z",
                           "totalReward": "16447931240",
                           "totalRewardFormatted": "16447.931240",
@@ -4831,7 +5225,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "delegatorAddress": "mantra1za8emt4vze4c9ssm2m75tzf0eve8qajnhdqtme",
                           "eventType": "delegate",
                           "amount": "47034614",
@@ -4907,7 +5301,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "delegatorAddress": "mantra1lqt62re8vxvpl62a8llurpq393y470vwj34ue4",
                           "amount": "234411",
                           "amountFormatted": "0.234411",
@@ -4998,7 +5392,7 @@
                         {
                           "validatorId": "53370563-e823-4d5d-8dd5-1c6b27a61a2a",
                           "validatorAddress": "mantravaloper1r3s4pefpz69fk4rq8sn0zt2wxnv09uffz06nxu",
-                          "validatorMoniker": "stakeFi",
+                          "validatorMoniker": "Anseta",
                           "date": "2025-09-30T00:00:00.000Z",
                           "totalReward": "16447931240",
                           "totalRewardFormatted": "16447.931240",
@@ -5190,7 +5584,7 @@
                     "value": {
                       "openapi": "3.0.0",
                       "info": {
-                        "title": "stakeFi Developer API",
+                        "title": "Anseta Developer API",
                         "version": "2.0.0",
                         "description": "API for creating unsigned staking transactions across multiple blockchain networks"
                       },
@@ -6007,6 +6401,136 @@
           },
           "500": {
             "description": "Validator not yet registered with the indexer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ethereum-staking/topup": {
+      "post": {
+        "operationId": "ethereumTopup",
+        "summary": "Add Stake (\"Topup\")",
+        "description": "Build an unsigned deposit-contract transaction that adds balance to an existing 0x02 (compounding) validator, reusing its pubkey and withdrawal credentials. Useful for pushing balance toward the 2048 ETH cap without provisioning a new validator.",
+        "tags": [
+          "Ethereum Staking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EthereumTopupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Unsigned topup tx returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EthereumTopupResponse"
+                    },
+                    "error": {
+                      "$ref": "#/components/schemas/ApiError"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Validator not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ethereum-staking/consolidate": {
+      "post": {
+        "operationId": "ethereumConsolidate",
+        "summary": "Transfer Stake (\"Consolidate\")",
+        "description": "Build an unsigned EIP-7251 consolidation request transaction that moves the source validator's balance into the target validator and exits the source. Both validators must share the same withdrawal address. Signed by the withdrawal address (msg.sender check on the EIP-7251 predeploy).",
+        "tags": [
+          "Ethereum Staking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EthereumConsolidateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Unsigned consolidation tx returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EthereumConsolidateResponse"
+                    },
+                    "error": {
+                      "$ref": "#/components/schemas/ApiError"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Validator not found",
             "content": {
               "application/json": {
                 "schema": {

@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -13,116 +13,116 @@
  */
 
 import { mapValues } from '../runtime';
-import type { EntityValidatorNetwork } from './EntityValidatorNetwork';
+import type { ValidatorNetwork } from './ValidatorNetwork';
 import {
-    EntityValidatorNetworkFromJSON,
-    EntityValidatorNetworkFromJSONTyped,
-    EntityValidatorNetworkToJSON,
-    EntityValidatorNetworkToJSONTyped,
-} from './EntityValidatorNetwork';
+    ValidatorNetworkFromJSON,
+    ValidatorNetworkFromJSONTyped,
+    ValidatorNetworkToJSON,
+    ValidatorNetworkToJSONTyped,
+} from './ValidatorNetwork';
 
 /**
- * Validator within an entity
+ * A validator available for delegation. validatorId is a UUID and is not the same value as validatorAddress; the history and rewards endpoints take the UUID.
  * @export
- * @interface EntityValidator
+ * @interface Validator
  */
-export interface EntityValidator {
+export interface Validator {
     /**
-     * Validator identifier
+     * Validator identifier (UUID)
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     validatorId: string;
     /**
      * Validator address
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     validatorAddress: string;
     /**
      * Validator display name
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     moniker: string;
     /**
      * Validator status
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     status: string;
     /**
      * 
-     * @type {EntityValidatorNetwork}
-     * @memberof EntityValidator
+     * @type {ValidatorNetwork}
+     * @memberof Validator
      */
-    network: EntityValidatorNetwork;
+    network: ValidatorNetwork;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     commissionRate?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     maxCommissionRate?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     maxCommissionChangeRate?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     publicDelegationEnabled?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     creationBlockNumber?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     ownerAddress?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     stakingContract?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     website?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     securityContact?: string;
     /**
      * 
      * @type {string}
-     * @memberof EntityValidator
+     * @memberof Validator
      */
     details?: string;
 }
 
 /**
- * Check if a given object implements the EntityValidator interface.
+ * Check if a given object implements the Validator interface.
  */
-export function instanceOfEntityValidator(value: object): value is EntityValidator {
+export function instanceOfValidator(value: object): value is Validator {
     if (!('validatorId' in value) || value['validatorId'] === undefined) return false;
     if (!('validatorAddress' in value) || value['validatorAddress'] === undefined) return false;
     if (!('moniker' in value) || value['moniker'] === undefined) return false;
@@ -131,11 +131,11 @@ export function instanceOfEntityValidator(value: object): value is EntityValidat
     return true;
 }
 
-export function EntityValidatorFromJSON(json: any): EntityValidator {
-    return EntityValidatorFromJSONTyped(json, false);
+export function ValidatorFromJSON(json: any): Validator {
+    return ValidatorFromJSONTyped(json, false);
 }
 
-export function EntityValidatorFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntityValidator {
+export function ValidatorFromJSONTyped(json: any, ignoreDiscriminator: boolean): Validator {
     if (json == null) {
         return json;
     }
@@ -145,7 +145,7 @@ export function EntityValidatorFromJSONTyped(json: any, ignoreDiscriminator: boo
         'validatorAddress': json['validatorAddress'],
         'moniker': json['moniker'],
         'status': json['status'],
-        'network': EntityValidatorNetworkFromJSON(json['network']),
+        'network': ValidatorNetworkFromJSON(json['network']),
         'commissionRate': json['commissionRate'] == null ? undefined : json['commissionRate'],
         'maxCommissionRate': json['maxCommissionRate'] == null ? undefined : json['maxCommissionRate'],
         'maxCommissionChangeRate': json['maxCommissionChangeRate'] == null ? undefined : json['maxCommissionChangeRate'],
@@ -159,11 +159,11 @@ export function EntityValidatorFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function EntityValidatorToJSON(json: any): EntityValidator {
-    return EntityValidatorToJSONTyped(json, false);
+export function ValidatorToJSON(json: any): Validator {
+    return ValidatorToJSONTyped(json, false);
 }
 
-export function EntityValidatorToJSONTyped(value?: EntityValidator | null, ignoreDiscriminator: boolean = false): any {
+export function ValidatorToJSONTyped(value?: Validator | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -174,7 +174,7 @@ export function EntityValidatorToJSONTyped(value?: EntityValidator | null, ignor
         'validatorAddress': value['validatorAddress'],
         'moniker': value['moniker'],
         'status': value['status'],
-        'network': EntityValidatorNetworkToJSON(value['network']),
+        'network': ValidatorNetworkToJSON(value['network']),
         'commissionRate': value['commissionRate'],
         'maxCommissionRate': value['maxCommissionRate'],
         'maxCommissionChangeRate': value['maxCommissionChangeRate'],

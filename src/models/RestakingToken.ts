@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -14,7 +14,7 @@
 
 
 /**
- * The token to filter restaking stakes for
+ * The restaked token symbol
  * @export
  */
 export const RestakingToken = {

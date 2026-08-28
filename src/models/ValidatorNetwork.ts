@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * Network the validator runs on
  * @export
- * @interface EntityValidatorNetwork
+ * @interface ValidatorNetwork
  */
-export interface EntityValidatorNetwork {
+export interface ValidatorNetwork {
     /**
      * Network identifier
      * @type {string}
-     * @memberof EntityValidatorNetwork
+     * @memberof ValidatorNetwork
      */
     name: string;
     /**
      * Network type
      * @type {string}
-     * @memberof EntityValidatorNetwork
+     * @memberof ValidatorNetwork
      */
-    type: EntityValidatorNetworkTypeEnum;
+    type: ValidatorNetworkTypeEnum;
     /**
      * Native token
      * @type {string}
-     * @memberof EntityValidatorNetwork
+     * @memberof ValidatorNetwork
      */
     nativeToken: string;
     /**
      * Token symbol
      * @type {string}
-     * @memberof EntityValidatorNetwork
+     * @memberof ValidatorNetwork
      */
     tokenSymbol: string | null;
     /**
      * Token decimals
      * @type {number}
-     * @memberof EntityValidatorNetwork
+     * @memberof ValidatorNetwork
      */
     decimals: number | null;
 }
@@ -55,17 +55,17 @@ export interface EntityValidatorNetwork {
 /**
  * @export
  */
-export const EntityValidatorNetworkTypeEnum = {
+export const ValidatorNetworkTypeEnum = {
     Mainnet: 'mainnet',
     Testnet: 'testnet'
 } as const;
-export type EntityValidatorNetworkTypeEnum = typeof EntityValidatorNetworkTypeEnum[keyof typeof EntityValidatorNetworkTypeEnum];
+export type ValidatorNetworkTypeEnum = typeof ValidatorNetworkTypeEnum[keyof typeof ValidatorNetworkTypeEnum];
 
 
 /**
- * Check if a given object implements the EntityValidatorNetwork interface.
+ * Check if a given object implements the ValidatorNetwork interface.
  */
-export function instanceOfEntityValidatorNetwork(value: object): value is EntityValidatorNetwork {
+export function instanceOfValidatorNetwork(value: object): value is ValidatorNetwork {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('type' in value) || value['type'] === undefined) return false;
     if (!('nativeToken' in value) || value['nativeToken'] === undefined) return false;
@@ -74,11 +74,11 @@ export function instanceOfEntityValidatorNetwork(value: object): value is Entity
     return true;
 }
 
-export function EntityValidatorNetworkFromJSON(json: any): EntityValidatorNetwork {
-    return EntityValidatorNetworkFromJSONTyped(json, false);
+export function ValidatorNetworkFromJSON(json: any): ValidatorNetwork {
+    return ValidatorNetworkFromJSONTyped(json, false);
 }
 
-export function EntityValidatorNetworkFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntityValidatorNetwork {
+export function ValidatorNetworkFromJSONTyped(json: any, ignoreDiscriminator: boolean): ValidatorNetwork {
     if (json == null) {
         return json;
     }
@@ -92,11 +92,11 @@ export function EntityValidatorNetworkFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function EntityValidatorNetworkToJSON(json: any): EntityValidatorNetwork {
-    return EntityValidatorNetworkToJSONTyped(json, false);
+export function ValidatorNetworkToJSON(json: any): ValidatorNetwork {
+    return ValidatorNetworkToJSONTyped(json, false);
 }
 
-export function EntityValidatorNetworkToJSONTyped(value?: EntityValidatorNetwork | null, ignoreDiscriminator: boolean = false): any {
+export function ValidatorNetworkToJSONTyped(value?: ValidatorNetwork | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

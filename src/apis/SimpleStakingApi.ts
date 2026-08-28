@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -19,8 +19,8 @@ import type {
   DailyRewardsResponse,
   DelegationHistoryResponse,
   ErrorResponse,
-  GetStakingPositions200Response,
-  GetValidators200Response,
+  GetStakesResponse,
+  GetValidatorsResponse,
   RewardHistoryResponse,
   SimplifiedStakeRequest,
   StakingNetwork,
@@ -36,10 +36,10 @@ import {
     DelegationHistoryResponseToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
-    GetStakingPositions200ResponseFromJSON,
-    GetStakingPositions200ResponseToJSON,
-    GetValidators200ResponseFromJSON,
-    GetValidators200ResponseToJSON,
+    GetStakesResponseFromJSON,
+    GetStakesResponseToJSON,
+    GetValidatorsResponseFromJSON,
+    GetValidatorsResponseToJSON,
     RewardHistoryResponseFromJSON,
     RewardHistoryResponseToJSON,
     SimplifiedStakeRequestFromJSON,
@@ -197,13 +197,13 @@ export interface SimpleStakingApiInterface {
      * @throws {RequiredError}
      * @memberof SimpleStakingApiInterface
      */
-    getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakingPositions200Response>>;
+    getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakesResponse>>;
 
     /**
      *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
      * Get staking positions
      */
-    getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakingPositions200Response>;
+    getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakesResponse>;
 
     /**
      * Returns the reward withdrawal transaction history for a specific validator
@@ -231,13 +231,13 @@ export interface SimpleStakingApiInterface {
      * @throws {RequiredError}
      * @memberof SimpleStakingApiInterface
      */
-    getValidatorsRaw(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidators200Response>>;
+    getValidatorsRaw(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidatorsResponse>>;
 
     /**
      * Returns a list of validators with network and status information
      * Get validators
      */
-    getValidators(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidators200Response>;
+    getValidators(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidatorsResponse>;
 
 }
 
@@ -474,7 +474,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
      *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
      * Get staking positions
      */
-    async getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakingPositions200Response>> {
+    async getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakesResponse>> {
         if (requestParameters['staker'] == null) {
             throw new runtime.RequiredError(
                 'staker',
@@ -534,14 +534,14 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetStakingPositions200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetStakesResponseFromJSON(jsonValue));
     }
 
     /**
      *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
      * Get staking positions
      */
-    async getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakingPositions200Response> {
+    async getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakesResponse> {
         const response = await this.getStakingPositionsRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -593,7 +593,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
      * Returns a list of validators with network and status information
      * Get validators
      */
-    async getValidatorsRaw(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidators200Response>> {
+    async getValidatorsRaw(requestParameters: GetValidatorsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidatorsResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['network'] != null) {
@@ -617,14 +617,14 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetValidators200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetValidatorsResponseFromJSON(jsonValue));
     }
 
     /**
      * Returns a list of validators with network and status information
      * Get validators
      */
-    async getValidators(requestParameters: GetValidatorsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidators200Response> {
+    async getValidators(requestParameters: GetValidatorsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidatorsResponse> {
         const response = await this.getValidatorsRaw(requestParameters, initOverrides);
         return await response.value();
     }

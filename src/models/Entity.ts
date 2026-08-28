@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { EntityValidator } from './EntityValidator';
+import type { Validator } from './Validator';
 import {
-    EntityValidatorFromJSON,
-    EntityValidatorFromJSONTyped,
-    EntityValidatorToJSON,
-    EntityValidatorToJSONTyped,
-} from './EntityValidator';
+    ValidatorFromJSON,
+    ValidatorFromJSONTyped,
+    ValidatorToJSON,
+    ValidatorToJSONTyped,
+} from './Validator';
 
 /**
  * Validator organization
@@ -59,10 +59,10 @@ export interface Entity {
     active: boolean;
     /**
      * Validators operated by this entity
-     * @type {Array<EntityValidator>}
+     * @type {Array<Validator>}
      * @memberof Entity
      */
-    validators?: Array<EntityValidator>;
+    validators?: Array<Validator>;
 }
 
 /**
@@ -92,7 +92,7 @@ export function EntityFromJSONTyped(json: any, ignoreDiscriminator: boolean): En
         'name': json['name'],
         'description': json['description'],
         'active': json['active'],
-        'validators': json['validators'] == null ? undefined : ((json['validators'] as Array<any>).map(EntityValidatorFromJSON)),
+        'validators': json['validators'] == null ? undefined : ((json['validators'] as Array<any>).map(ValidatorFromJSON)),
     };
 }
 
@@ -112,7 +112,7 @@ export function EntityToJSONTyped(value?: Entity | null, ignoreDiscriminator: bo
         'name': value['name'],
         'description': value['description'],
         'active': value['active'],
-        'validators': value['validators'] == null ? undefined : ((value['validators'] as Array<any>).map(EntityValidatorToJSON)),
+        'validators': value['validators'] == null ? undefined : ((value['validators'] as Array<any>).map(ValidatorToJSON)),
     };
 }
 
