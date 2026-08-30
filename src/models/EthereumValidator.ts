@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -88,6 +88,12 @@ export interface EthereumValidator {
      * @memberof EthereumValidator
      */
     effectiveBalanceWei: string | null;
+    /**
+     * Deposited but not yet credited, in wei — sits in the consensus layer's pending_deposits queue. Null when there is nothing queued. Do not sum with balanceWei.
+     * @type {string}
+     * @memberof EthereumValidator
+     */
+    pendingDepositWei: string | null;
     /**
      * Validator lifecycle stage. `pending` = no on-chain deposit observed yet (pre-broadcast or never broadcast). `queued` = deposit on chain, waiting in the Electra pending_deposits queue (no beacon registry entry yet). `activating` = beacon has the validator and it is in the activation queue. `active` = attesting. `exit_pending` = a force-exit tx mined on EL but beacon hasn't ingested it yet. `exiting` = beacon ingested the exit and the validator is winding down. `withdrawn` = principal returned to the withdrawal address.
      * @type {string}
@@ -198,6 +204,7 @@ export function instanceOfEthereumValidator(value: object): value is EthereumVal
     if (!('feeRecipient' in value) || value['feeRecipient'] === undefined) return false;
     if (!('balanceWei' in value) || value['balanceWei'] === undefined) return false;
     if (!('effectiveBalanceWei' in value) || value['effectiveBalanceWei'] === undefined) return false;
+    if (!('pendingDepositWei' in value) || value['pendingDepositWei'] === undefined) return false;
     if (!('state' in value) || value['state'] === undefined) return false;
     if (!('consensusLayerState' in value) || value['consensusLayerState'] === undefined) return false;
     if (!('indexerState' in value) || value['indexerState'] === undefined) return false;
@@ -227,6 +234,7 @@ export function EthereumValidatorFromJSONTyped(json: any, ignoreDiscriminator: b
         'feeRecipient': json['feeRecipient'],
         'balanceWei': json['balanceWei'],
         'effectiveBalanceWei': json['effectiveBalanceWei'],
+        'pendingDepositWei': json['pendingDepositWei'],
         'state': json['state'],
         'consensusLayerState': json['consensusLayerState'],
         'indexerState': json['indexerState'],
@@ -257,6 +265,7 @@ export function EthereumValidatorToJSONTyped(value?: EthereumValidator | null, i
         'feeRecipient': value['feeRecipient'],
         'balanceWei': value['balanceWei'],
         'effectiveBalanceWei': value['effectiveBalanceWei'],
+        'pendingDepositWei': value['pendingDepositWei'],
         'state': value['state'],
         'consensusLayerState': value['consensusLayerState'],
         'indexerState': value['indexerState'],

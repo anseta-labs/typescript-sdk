@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * stakeFi Developer API
- * API for creating unsigned staking transactions across multiple blockchain networks
+ * Anseta Developer API
+ * Unified API for blockchain staking operations across multiple networks.
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -18,8 +18,8 @@ import type {
   DailyRewardsResponse,
   DelegationHistoryResponse,
   ErrorResponse,
-  GetStakingPositions200Response,
-  GetValidators200Response,
+  GetOperatorsResponse,
+  GetRestakingStakesResponse,
   RestakingDelegateRequest,
   RestakingDepositRequest,
   RestakingNetwork,
@@ -37,10 +37,10 @@ import {
     DelegationHistoryResponseToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
-    GetStakingPositions200ResponseFromJSON,
-    GetStakingPositions200ResponseToJSON,
-    GetValidators200ResponseFromJSON,
-    GetValidators200ResponseToJSON,
+    GetOperatorsResponseFromJSON,
+    GetOperatorsResponseToJSON,
+    GetRestakingStakesResponseFromJSON,
+    GetRestakingStakesResponseToJSON,
     RestakingDelegateRequestFromJSON,
     RestakingDelegateRequestToJSON,
     RestakingDepositRequestFromJSON,
@@ -98,7 +98,7 @@ export interface GetRestakingPositionsRequest {
     staker: string;
     network: RestakingNetwork;
     operator: string;
-    token: RestakingToken;
+    token?: RestakingToken;
 }
 
 export interface GetRestakingRewardHistoryRequest {
@@ -237,13 +237,13 @@ export interface EigenlayerRestakingApiInterface {
      * @throws {RequiredError}
      * @memberof EigenlayerRestakingApiInterface
      */
-    getRestakingOperatorsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidators200Response>>;
+    getRestakingOperatorsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetOperatorsResponse>>;
 
     /**
      * Returns a list of restaking operators with protocol and network information
      * Get restaking operators
      */
-    getRestakingOperators(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidators200Response>;
+    getRestakingOperators(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetOperatorsResponse>;
 
     /**
      *  Returns the current restaking positions for an address on EigenLayer.  ## Supported Networks  | Network | |---------| | **ethereum** | | **ethereum-hoodi-testnet** |  ## Supported Tokens (optional filter)  | Token | |-------| | **EIGEN** | | **STETH** | | **RETH** | | **CBETH** | 
@@ -251,18 +251,18 @@ export interface EigenlayerRestakingApiInterface {
      * @param {string} staker The staker address to query restaking stakes for
      * @param {RestakingNetwork} network The blockchain network to query
      * @param {string} operator The operator address to filter by
-     * @param {RestakingToken} token The token to filter restaking stakes for
+     * @param {RestakingToken} [token] Optional token filter. Omit to return the staker\&#39;s positions across every restaked token.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EigenlayerRestakingApiInterface
      */
-    getRestakingPositionsRaw(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakingPositions200Response>>;
+    getRestakingPositionsRaw(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRestakingStakesResponse>>;
 
     /**
      *  Returns the current restaking positions for an address on EigenLayer.  ## Supported Networks  | Network | |---------| | **ethereum** | | **ethereum-hoodi-testnet** |  ## Supported Tokens (optional filter)  | Token | |-------| | **EIGEN** | | **STETH** | | **RETH** | | **CBETH** | 
      * Get restaking positions
      */
-    getRestakingPositions(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakingPositions200Response>;
+    getRestakingPositions(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRestakingStakesResponse>;
 
     /**
      * Returns the restaking reward withdrawal transaction history for a specific operator
@@ -600,7 +600,7 @@ export class EigenlayerRestakingApi extends runtime.BaseAPI implements Eigenlaye
      * Returns a list of restaking operators with protocol and network information
      * Get restaking operators
      */
-    async getRestakingOperatorsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetValidators200Response>> {
+    async getRestakingOperatorsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetOperatorsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -616,14 +616,14 @@ export class EigenlayerRestakingApi extends runtime.BaseAPI implements Eigenlaye
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetValidators200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetOperatorsResponseFromJSON(jsonValue));
     }
 
     /**
      * Returns a list of restaking operators with protocol and network information
      * Get restaking operators
      */
-    async getRestakingOperators(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetValidators200Response> {
+    async getRestakingOperators(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetOperatorsResponse> {
         const response = await this.getRestakingOperatorsRaw(initOverrides);
         return await response.value();
     }
@@ -632,7 +632,7 @@ export class EigenlayerRestakingApi extends runtime.BaseAPI implements Eigenlaye
      *  Returns the current restaking positions for an address on EigenLayer.  ## Supported Networks  | Network | |---------| | **ethereum** | | **ethereum-hoodi-testnet** |  ## Supported Tokens (optional filter)  | Token | |-------| | **EIGEN** | | **STETH** | | **RETH** | | **CBETH** | 
      * Get restaking positions
      */
-    async getRestakingPositionsRaw(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakingPositions200Response>> {
+    async getRestakingPositionsRaw(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRestakingStakesResponse>> {
         if (requestParameters['staker'] == null) {
             throw new runtime.RequiredError(
                 'staker',
@@ -651,13 +651,6 @@ export class EigenlayerRestakingApi extends runtime.BaseAPI implements Eigenlaye
             throw new runtime.RequiredError(
                 'operator',
                 'Required parameter "operator" was null or undefined when calling getRestakingPositions().'
-            );
-        }
-
-        if (requestParameters['token'] == null) {
-            throw new runtime.RequiredError(
-                'token',
-                'Required parameter "token" was null or undefined when calling getRestakingPositions().'
             );
         }
 
@@ -692,14 +685,14 @@ export class EigenlayerRestakingApi extends runtime.BaseAPI implements Eigenlaye
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetStakingPositions200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetRestakingStakesResponseFromJSON(jsonValue));
     }
 
     /**
      *  Returns the current restaking positions for an address on EigenLayer.  ## Supported Networks  | Network | |---------| | **ethereum** | | **ethereum-hoodi-testnet** |  ## Supported Tokens (optional filter)  | Token | |-------| | **EIGEN** | | **STETH** | | **RETH** | | **CBETH** | 
      * Get restaking positions
      */
-    async getRestakingPositions(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakingPositions200Response> {
+    async getRestakingPositions(requestParameters: GetRestakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRestakingStakesResponse> {
         const response = await this.getRestakingPositionsRaw(requestParameters, initOverrides);
         return await response.value();
     }
