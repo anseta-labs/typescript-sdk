@@ -204,6 +204,10 @@ Generator settings live in `openapitools.json`. `.openapi-generator-ignore` keep
 
 Requires a JDK on `PATH` (the generator runs as a jar).
 
+## Releasing
+
+See [RELEASING.md](./RELEASING.md).
+
 ## Scripts
 
 | Script | Does |
