@@ -2,7 +2,7 @@
 /**
  * Two edits to CHANGELOG.md, neither of which anyone should do by hand.
  *
- *   add <<<block      inserts a block under "## Unreleased", read from stdin
+ *   add <<<block      merges a block into "## Unreleased", read from stdin
  *   release <version> renames "## Unreleased" to the version and today's date,
  *                     and opens a fresh empty Unreleased above it
  *
@@ -23,13 +23,50 @@ async function readStdin() {
   return Buffer.concat(chunks).toString('utf8').trim();
 }
 
-function splitAtUnreleased(text) {
+/** head: everything up to and including the Unreleased heading. */
+function split(text) {
   const index = text.indexOf(UNRELEASED);
   if (index === -1) {
     throw new Error(`${CHANGELOG} has no "${UNRELEASED}" heading`);
   }
   const after = index + UNRELEASED.length;
-  return { head: text.slice(0, after), tail: text.slice(after) };
+  const rest = text.slice(after);
+  const next = rest.search(/\n## /);
+  return {
+    head: text.slice(0, after),
+    body: next === -1 ? rest : rest.slice(0, next),
+    rest: next === -1 ? '' : rest.slice(next),
+  };
+}
+
+/** Splits a section body into its "### " groups, keeping anything before them. */
+function parse(body) {
+  const preamble = [];
+  const sections = new Map();
+  let current = null;
+
+  for (const line of body.split('\n')) {
+    const heading = /^### (.+)$/.exec(line);
+    if (heading) {
+      current = heading[1].trim();
+      if (!sections.has(current)) sections.set(current, []);
+      continue;
+    }
+    (current === null ? preamble : sections.get(current)).push(line);
+  }
+  return { preamble, sections };
+}
+
+function render(preamble, sections) {
+  const parts = [];
+  const intro = preamble.join('\n').trim();
+  if (intro) parts.push(intro);
+
+  for (const [heading, lines] of sections) {
+    const entries = lines.join('\n').trim();
+    if (entries) parts.push(`### ${heading}\n${entries}`);
+  }
+  return parts.join('\n\n');
 }
 
 async function add() {
@@ -40,9 +77,36 @@ async function add() {
   }
 
   const text = await readFile(CHANGELOG, 'utf8');
-  const { head, tail } = splitAtUnreleased(text);
-  await writeFile(CHANGELOG, `${head}\n\n${block}\n${tail.replace(/^\n+/, '\n')}`);
-  console.log(`Added ${block.split('\n').length} lines under ${UNRELEASED}.`);
+  const { head, body, rest } = split(text);
+
+  const existing = parse(body);
+  const incoming = parse(block);
+
+  // Anything the incoming block says before its first heading is prose worth
+  // keeping, so it joins the preamble rather than being dropped.
+  const preamble = [...existing.preamble, ...incoming.preamble];
+
+  let merged = 0;
+  for (const [heading, lines] of incoming.sections) {
+    if (!existing.sections.has(heading)) existing.sections.set(heading, []);
+    const target = existing.sections.get(heading);
+    // Trim the blank lines either side of the join, or merged entries end up
+    // separated by a gap that reads as two lists.
+    while (target.length && !target[target.length - 1].trim()) target.pop();
+    while (lines.length && !lines[0].trim()) lines.shift();
+    for (const line of lines) {
+      // Identical entries mean the same change was reported twice.
+      if (line.trim() && target.includes(line)) continue;
+      target.push(line);
+      if (line.trim()) merged += 1;
+    }
+  }
+
+  const rebuilt = render(preamble, existing.sections);
+  await writeFile(CHANGELOG, `${head}\n\n${rebuilt}\n${rest || '\n'}`);
+  console.log(
+    `Merged ${merged} entries into ${UNRELEASED} across ${incoming.sections.size} section(s).`,
+  );
 }
 
 async function release() {
@@ -51,18 +115,18 @@ async function release() {
   }
 
   const text = await readFile(CHANGELOG, 'utf8');
-  const { head, tail } = splitAtUnreleased(text);
+  const { head, body, rest } = split(text);
 
-  const body = tail.split(/\n## /)[0].trim();
-  if (!body) {
+  if (!body.trim()) {
     throw new Error(`${UNRELEASED} is empty. Describe the change before releasing ${argument}.`);
   }
 
   // Date rather than timestamp: a changelog entry is dated, not timed.
   const today = new Date().toISOString().slice(0, 10);
-  const replaced = `${head.slice(0, -UNRELEASED.length)}${UNRELEASED}\n\n## ${argument} - ${today}${tail}`;
-
-  await writeFile(CHANGELOG, replaced);
+  await writeFile(
+    CHANGELOG,
+    `${head}\n\n## ${argument} - ${today}\n${body.replace(/^\n+/, '\n')}${rest}`,
+  );
   console.log(`Released ${argument} (${today}); Unreleased is now empty.`);
 }
 
