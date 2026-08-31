@@ -68,8 +68,14 @@ jobs:
       - run: pnpm run typecheck:examples
       - run: pnpm run build
 
+      # Trusted publishing is implemented in the npm CLI and needs 11.5.1 or
+      # later; the npm bundled with Node 22 is older, and pnpm does not perform
+      # the OIDC exchange at all. Install and build with pnpm, publish with npm.
       - name: Publish
-        run: pnpm publish --access public --no-git-checks
+        run: |
+          npm install -g npm@latest
+          npm --version
+          npm publish --access public
 
       - name: Extract this version's changelog section
         id: notes

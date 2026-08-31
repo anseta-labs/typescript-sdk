@@ -56,7 +56,12 @@ or schemas are a minor. Everything else is a patch.
 
 ## Authentication
 
-There is no npm token. Publishing uses npm Trusted Publishing: the job asks
+There is no npm token. Publishing uses npm Trusted Publishing, which is
+implemented in the npm CLI only: the workflow installs and builds with
+pnpm but publishes with `npm publish`, after upgrading npm past 11.5.1.
+`pnpm publish` does not perform the OIDC exchange and fails with a 404.
+
+The mechanism: the job asks
 GitHub for a short-lived signed token describing which repository, workflow and
 ref it is running as, and npm checks those claims against the trusted publisher
 configured on the package. Nothing is stored, so there is nothing to rotate or
