@@ -118,6 +118,20 @@ const summary = [
   .filter(Boolean)
   .join('\n');
 
+const section = (heading, entries) =>
+  entries.length ? `### ${heading}\n${entries.map((e) => `- ${e}`).join('\n')}\n` : '';
+
+const changelog = [
+  section('Added', [...addedOperations, ...addedSchemas]),
+  section(
+    'Changed',
+    newlyRequired.map((n) => `${n} is now required`),
+  ),
+  section('Removed', [...removedOperations, ...removedSchemas, ...removedEnumValues]),
+]
+  .filter(Boolean)
+  .join('\n');
+
 console.log(summary);
 
 if (process.env.GITHUB_OUTPUT) {
@@ -129,6 +143,9 @@ if (process.env.GITHUB_OUTPUT) {
       `spec_version=${specVersion}`,
       `summary<<${delimiter}`,
       summary,
+      delimiter,
+      `changelog<<${delimiter}`,
+      changelog,
       delimiter,
       '',
     ].join('\n'),
