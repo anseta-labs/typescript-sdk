@@ -54,7 +54,8 @@
     "typecheck:examples": "tsc -p tsconfig.examples.json",
     "clean": "rm -rf dist",
     "format": "prettier --write \"scripts/**/*.mjs\" \"examples/**/*.ts\"",
-    "prepublishOnly": "pnpm run clean && pnpm run build"
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "changelog": "node scripts/changelog.mjs"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.15.3",

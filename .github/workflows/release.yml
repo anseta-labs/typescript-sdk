@@ -56,6 +56,14 @@ jobs:
             exit 1
           fi
 
+      - name: CHANGELOG must describe this version
+        run: |
+          V="${{ steps.version.outputs.version }}"
+          if ! awk -v v="$V" '$0 ~ "^## " v " " {f=1;next} f && /^## /{exit} f' CHANGELOG.md | grep -q '[^[:space:]]'; then
+            echo "::error::CHANGELOG has no entry for $V. Run: node scripts/changelog.mjs release $V"
+            exit 1
+          fi
+
       - run: pnpm run typecheck
       - run: pnpm run typecheck:examples
       - run: pnpm run build

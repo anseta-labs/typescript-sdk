@@ -86,6 +86,13 @@ jobs:
             --previous /tmp/openapi.previous.json \
             --current openapi.json
 
+      - name: Record the change in the CHANGELOG
+        if: steps.changed.outputs.result == 'true'
+        run: |
+          cat <<'ENTRY' | node scripts/changelog.mjs add
+          ${{ steps.diff.outputs.changelog }}
+          ENTRY
+
       # Gates the PR on the client compiling. typecheck:examples is the useful
       # one: the examples exercise real method names, so a rename fails here.
       - name: Typecheck and build

@@ -6,14 +6,21 @@ until a version tag is pushed by hand.
 ## Cutting a release
 
 ```bash
+node scripts/changelog.mjs release 0.2.0   # renames Unreleased, dates it
 pnpm pkg set version=0.2.0
-# in CHANGELOG.md, rename "## Unreleased" to "## 0.2.0 - <today>"
 git commit -am "chore: release 0.2.0"
 git push
 
 git tag v0.2.0
 git push origin v0.2.0          # this is what triggers publishing
 ```
+
+Most of the Unreleased section writes itself: the regeneration workflow appends
+what changed in the spec, grouped under Added, Changed and Removed. Add
+anything it cannot see (a Node version floor, a fix in `scripts/`) by hand
+before releasing. `changelog.mjs release` refuses to run on an empty section,
+and the release workflow refuses to publish a version the CHANGELOG does not
+describe.
 
 Order matters. The tag points at a commit, and the commit it points at must
 already contain the new version, because that is the tree CI checks out and
