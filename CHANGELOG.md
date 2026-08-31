@@ -9,6 +9,16 @@ version of the Anseta API.
 
 ## Unreleased
 
+## 0.2.0 - 2026-08-31
+
+### Added
+- `ethereumTopup` and `ethereumConsolidate` operations
+- Typed responses for staking positions, validators and restaking operators: `Stake`, `Validator`, `Operator`, and their response wrappers
+
+### Changed
+- `EntityValidator` is now `Validator`, with `EntityValidatorNetwork` becoming `ValidatorNetwork`. The shape is unchanged
+- `GetStakingPositions200Response` and `GetValidators200Response` are replaced by `GetStakesResponse` and `GetValidatorsResponse`, whose `data` is typed rather than `any`
+
 ## 0.1.0 - 2026-08-27
 
 First release. The client is generated from the Anseta Developer API's OpenAPI
