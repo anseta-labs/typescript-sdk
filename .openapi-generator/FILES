@@ -11,6 +11,8 @@ src/models/DailyRewardItem.ts
 src/models/DailyRewardsResponse.ts
 src/models/DelegationHistoryItem.ts
 src/models/DelegationHistoryResponse.ts
+src/models/DiscoveryNetwork.ts
+src/models/DiscoveryToken.ts
 src/models/Entity.ts
 src/models/ErrorResponse.ts
 src/models/EthereumCancelStake200Response.ts
