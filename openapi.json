@@ -1259,6 +1259,62 @@
         ],
         "description": "List of supported tokens"
       },
+      "DiscoveryNetwork": {
+        "type": "string",
+        "enum": [
+          "ethereum",
+          "solana",
+          "somnia",
+          "monad",
+          "mantra",
+          "nillion",
+          "kaia",
+          "cardano",
+          "sonic",
+          "near",
+          "aptos",
+          "zenrock",
+          "solana-testnet",
+          "sonic-testnet",
+          "somnia-testnet",
+          "ethereum-sepolia-testnet",
+          "mantra-testnet",
+          "monad-testnet",
+          "hedera-testnet",
+          "nillion-testnet",
+          "kaia-kairos-testnet",
+          "cardano-testnet",
+          "zenrock-testnet",
+          "ethereum-hoodi-testnet"
+        ],
+        "example": "ethereum",
+        "description": "Filter by network name"
+      },
+      "DiscoveryToken": {
+        "type": "string",
+        "enum": [
+          "POL",
+          "SOL",
+          "SOMI",
+          "MON",
+          "MANTRA",
+          "NILL",
+          "KAIA",
+          "ADA",
+          "S",
+          "NEAR",
+          "APT",
+          "ROCK",
+          "HBAR",
+          "EIGEN",
+          "BEIGEN",
+          "STETH",
+          "CBETH",
+          "RETH"
+        ],
+        "example": "STETH",
+        "description": "Filter by token symbol"
+      },
       "StakingOption": {
         "type": "object",
         "properties": {
@@ -4506,14 +4562,7 @@
         "parameters": [
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingNetwork"
-                },
-                {
-                  "description": "Filter by network name"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryNetwork"
             },
             "required": false,
             "description": "Filter by network name",
@@ -4522,14 +4571,7 @@
           },
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingToken"
-                },
-                {
-                  "description": "Filter by token symbol"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryToken"
             },
             "required": false,
             "description": "Filter by token symbol",
@@ -4631,14 +4673,7 @@
         "parameters": [
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingNetwork"
-                },
-                {
-                  "description": "Filter by network name"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryNetwork"
             },
             "required": false,
             "description": "Filter by network name",
@@ -4647,14 +4682,7 @@
           },
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingToken"
-                },
-                {
-                  "description": "Filter by token symbol"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryToken"
             },
             "required": false,
             "description": "Filter by token symbol",

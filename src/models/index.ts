@@ -6,6 +6,8 @@ export * from './DailyRewardItem';
 export * from './DailyRewardsResponse';
 export * from './DelegationHistoryItem';
 export * from './DelegationHistoryResponse';
+export * from './DiscoveryNetwork';
+export * from './DiscoveryToken';
 export * from './Entity';
 export * from './ErrorResponse';
 export * from './EthereumCancelStake200Response';
