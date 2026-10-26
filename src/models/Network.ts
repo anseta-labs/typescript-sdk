@@ -28,6 +28,7 @@ export const Network = {
     Mantra: 'mantra',
     Nillion: 'nillion',
     Zenrock: 'zenrock',
+    Injective: 'injective',
     Zetachain: 'zetachain',
     Cronos: 'cronos',
     Autonity: 'autonity',

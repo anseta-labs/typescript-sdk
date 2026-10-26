@@ -9,6 +9,12 @@ version of the Anseta API.
 
 ## Unreleased
 
+### Added
+- ethereumGetQueue
+- DiscoveryNetwork
+- DiscoveryToken
+- EthereumGetQueueResponse
+
 ## 0.2.0 - 2026-08-31
 
 ### Added

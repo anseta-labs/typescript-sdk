@@ -95,6 +95,12 @@ export interface EthereumValidator {
      */
     pendingDepositWei: string | null;
     /**
+     * Estimated ISO 8601 time the queued deposit is processed, from its position in the pending_deposits queue. For a new validator it includes the activation delay. Null when nothing is queued.
+     * @type {string}
+     * @memberof EthereumValidator
+     */
+    pendingDepositEstimatedAt: string | null;
+    /**
      * Validator lifecycle stage. `pending` = no on-chain deposit observed yet (pre-broadcast or never broadcast). `queued` = deposit on chain, waiting in the Electra pending_deposits queue (no beacon registry entry yet). `activating` = beacon has the validator and it is in the activation queue. `active` = attesting. `exit_pending` = a force-exit tx mined on EL but beacon hasn't ingested it yet. `exiting` = beacon ingested the exit and the validator is winding down. `withdrawn` = principal returned to the withdrawal address.
      * @type {string}
      * @memberof EthereumValidator
@@ -205,6 +211,7 @@ export function instanceOfEthereumValidator(value: object): value is EthereumVal
     if (!('balanceWei' in value) || value['balanceWei'] === undefined) return false;
     if (!('effectiveBalanceWei' in value) || value['effectiveBalanceWei'] === undefined) return false;
     if (!('pendingDepositWei' in value) || value['pendingDepositWei'] === undefined) return false;
+    if (!('pendingDepositEstimatedAt' in value) || value['pendingDepositEstimatedAt'] === undefined) return false;
     if (!('state' in value) || value['state'] === undefined) return false;
     if (!('consensusLayerState' in value) || value['consensusLayerState'] === undefined) return false;
     if (!('indexerState' in value) || value['indexerState'] === undefined) return false;
@@ -235,6 +242,7 @@ export function EthereumValidatorFromJSONTyped(json: any, ignoreDiscriminator: b
         'balanceWei': json['balanceWei'],
         'effectiveBalanceWei': json['effectiveBalanceWei'],
         'pendingDepositWei': json['pendingDepositWei'],
+        'pendingDepositEstimatedAt': json['pendingDepositEstimatedAt'],
         'state': json['state'],
         'consensusLayerState': json['consensusLayerState'],
         'indexerState': json['indexerState'],
@@ -266,6 +274,7 @@ export function EthereumValidatorToJSONTyped(value?: EthereumValidator | null, i
         'balanceWei': value['balanceWei'],
         'effectiveBalanceWei': value['effectiveBalanceWei'],
         'pendingDepositWei': value['pendingDepositWei'],
+        'pendingDepositEstimatedAt': value['pendingDepositEstimatedAt'],
         'state': value['state'],
         'consensusLayerState': value['consensusLayerState'],
         'indexerState': value['indexerState'],
