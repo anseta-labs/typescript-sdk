@@ -153,6 +153,12 @@
             "description": "Deposited but not yet credited, in wei — sits in the consensus layer's pending_deposits queue. Null when there is nothing queued. Do not sum with balanceWei.",
             "example": "1000000000000000000"
           },
+          "pendingDepositEstimatedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Estimated ISO 8601 time the queued deposit is processed, from its position in the pending_deposits queue. For a new validator it includes the activation delay. Null when nothing is queued.",
+            "example": "2026-10-21T09:12:00Z"
+          },
           "state": {
             "type": "string",
             "enum": [
@@ -229,6 +235,7 @@
           "balanceWei",
           "effectiveBalanceWei",
           "pendingDepositWei",
+          "pendingDepositEstimatedAt",
           "state",
           "consensusLayerState",
           "indexerState",
@@ -501,6 +508,7 @@
           "mantra",
           "nillion",
           "zenrock",
+          "injective",
           "zetachain",
           "cronos",
           "autonity",
@@ -1259,6 +1267,62 @@
         ],
         "description": "List of supported tokens"
       },
+      "DiscoveryNetwork": {
+        "type": "string",
+        "enum": [
+          "ethereum",
+          "solana",
+          "somnia",
+          "monad",
+          "mantra",
+          "nillion",
+          "kaia",
+          "cardano",
+          "sonic",
+          "near",
+          "aptos",
+          "zenrock",
+          "solana-testnet",
+          "sonic-testnet",
+          "somnia-testnet",
+          "ethereum-sepolia-testnet",
+          "mantra-testnet",
+          "monad-testnet",
+          "hedera-testnet",
+          "nillion-testnet",
+          "kaia-kairos-testnet",
+          "cardano-testnet",
+          "zenrock-testnet",
+          "ethereum-hoodi-testnet"
+        ],
+        "example": "ethereum",
+        "description": "Filter by network name"
+      },
+      "DiscoveryToken": {
+        "type": "string",
+        "enum": [
+          "POL",
+          "SOL",
+          "SOMI",
+          "MON",
+          "MANTRA",
+          "NILL",
+          "KAIA",
+          "ADA",
+          "S",
+          "NEAR",
+          "APT",
+          "ROCK",
+          "HBAR",
+          "EIGEN",
+          "BEIGEN",
+          "STETH",
+          "CBETH",
+          "RETH"
+        ],
+        "example": "STETH",
+        "description": "Filter by token symbol"
+      },
       "StakingOption": {
         "type": "object",
         "properties": {
@@ -1901,6 +1965,76 @@
         },
         "required": [
           "validators"
+        ]
+      },
+      "EthereumGetQueueResponse": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "$ref": "#/components/schemas/EthereumNetwork"
+          },
+          "headEpoch": {
+            "type": "integer",
+            "description": "Beacon head epoch the snapshot was taken at"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the snapshot was taken (ISO 8601)"
+          },
+          "entry": {
+            "type": "object",
+            "properties": {
+              "queuedGwei": {
+                "type": "string",
+                "description": "Total ETH waiting in the deposit queue, in gwei"
+              },
+              "depositCount": {
+                "type": "integer",
+                "description": "Number of deposits waiting in the queue"
+              },
+              "waitSeconds": {
+                "type": "integer",
+                "description": "Estimated time until a deposit made now activates a new validator"
+              }
+            },
+            "required": [
+              "queuedGwei",
+              "depositCount",
+              "waitSeconds"
+            ],
+            "description": "Entry (activation) queue"
+          },
+          "exit": {
+            "type": "object",
+            "properties": {
+              "exitingCount": {
+                "type": "integer",
+                "description": "Number of validators currently exiting"
+              },
+              "lastExitEpoch": {
+                "type": "integer",
+                "description": "Exit epoch of the last validator in the queue"
+              },
+              "waitSeconds": {
+                "type": "integer",
+                "description": "Estimated time until an exit requested now is processed (funds follow after the withdrawal sweep)"
+              }
+            },
+            "required": [
+              "exitingCount",
+              "lastExitEpoch",
+              "waitSeconds"
+            ],
+            "description": "Exit queue"
+          }
+        },
+        "required": [
+          "network",
+          "headEpoch",
+          "updatedAt",
+          "entry",
+          "exit"
         ]
       },
       "EthereumStakeResponse": {
@@ -4506,14 +4640,7 @@
         "parameters": [
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingNetwork"
-                },
-                {
-                  "description": "Filter by network name"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryNetwork"
             },
             "required": false,
             "description": "Filter by network name",
@@ -4522,14 +4649,7 @@
           },
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingToken"
-                },
-                {
-                  "description": "Filter by token symbol"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryToken"
             },
             "required": false,
             "description": "Filter by token symbol",
@@ -4631,14 +4751,7 @@
         "parameters": [
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingNetwork"
-                },
-                {
-                  "description": "Filter by network name"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryNetwork"
             },
             "required": false,
             "description": "Filter by network name",
@@ -4647,14 +4760,7 @@
           },
           {
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/StakingToken"
-                },
-                {
-                  "description": "Filter by token symbol"
-                }
-              ]
+              "$ref": "#/components/schemas/DiscoveryToken"
             },
             "required": false,
             "description": "Filter by token symbol",
@@ -5740,6 +5846,63 @@
                     },
                     "data": {
                       "$ref": "#/components/schemas/EthereumGetValidatorsResponse"
+                    },
+                    "error": {
+                      "$ref": "#/components/schemas/ApiError"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ethereum-staking/queue": {
+      "get": {
+        "operationId": "ethereumGetQueue",
+        "summary": "Get Queue",
+        "description": "Current size of the beacon chain entry (deposit) and exit queues, with estimated wait times. The snapshot is refreshed about every minute; `updatedAt` says when it was taken.\n\n`entry.waitSeconds` estimates how long a deposit made now takes to activate a new validator. `exit.waitSeconds` estimates how long an exit requested now takes to be processed; funds reach the withdrawal address after the withdrawal sweep that follows.",
+        "tags": [
+          "Ethereum Staking"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/EthereumNetwork"
+            },
+            "required": true,
+            "description": "Target Ethereum network",
+            "name": "network",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queue snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EthereumGetQueueResponse"
                     },
                     "error": {
                       "$ref": "#/components/schemas/ApiError"

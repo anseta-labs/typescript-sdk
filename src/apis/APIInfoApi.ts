@@ -15,16 +15,20 @@
 
 import * as runtime from '../runtime';
 import type {
+  DiscoveryNetwork,
+  DiscoveryToken,
   ErrorResponse,
   GetEntitiesResponse,
   GetNetworksResponse,
   GetTokensResponse,
   Network,
-  StakingNetwork,
   StakingOptionsResponse,
-  StakingToken,
 } from '../models/index';
 import {
+    DiscoveryNetworkFromJSON,
+    DiscoveryNetworkToJSON,
+    DiscoveryTokenFromJSON,
+    DiscoveryTokenToJSON,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
     GetEntitiesResponseFromJSON,
@@ -35,12 +39,8 @@ import {
     GetTokensResponseToJSON,
     NetworkFromJSON,
     NetworkToJSON,
-    StakingNetworkFromJSON,
-    StakingNetworkToJSON,
     StakingOptionsResponseFromJSON,
     StakingOptionsResponseToJSON,
-    StakingTokenFromJSON,
-    StakingTokenToJSON,
 } from '../models/index';
 
 export interface GetEntitiesRequest {
@@ -54,16 +54,16 @@ export interface GetNetworksRequest {
 }
 
 export interface GetStakingOptionsRequest {
-    network?: StakingNetwork;
-    token?: StakingToken;
+    network?: DiscoveryNetwork;
+    token?: DiscoveryToken;
     protocol?: GetStakingOptionsProtocolEnum;
     status?: GetStakingOptionsStatusEnum;
     testnet?: GetStakingOptionsTestnetEnum;
 }
 
 export interface GetTokensRequest {
-    network?: StakingNetwork;
-    symbol?: StakingToken;
+    network?: DiscoveryNetwork;
+    symbol?: DiscoveryToken;
     testnet?: GetTokensTestnetEnum;
     tokenAddress?: string;
 }
@@ -112,8 +112,8 @@ export interface APIInfoApiInterface {
     /**
      * Returns detailed staking options with network, token, protocol combinations and their requirements
      * @summary Get staking options
-     * @param {StakingNetwork} [network] Filter by network name
-     * @param {StakingToken} [token] Filter by token symbol
+     * @param {DiscoveryNetwork} [network] Filter by network name
+     * @param {DiscoveryToken} [token] Filter by token symbol
      * @param {'native' | 'eigenlayer' | 'morpho'} [protocol] Filter by protocol
      * @param {'LIVE' | 'PLANNED'} [status] Filter by staking status
      * @param {'true' | 'false'} [testnet] Filter by testnet/mainnet
@@ -132,8 +132,8 @@ export interface APIInfoApiInterface {
     /**
      * Returns a list of all supported tokens across all networks with their configuration details
      * @summary Get supported tokens
-     * @param {StakingNetwork} [network] Filter by network name
-     * @param {StakingToken} [symbol] Filter by token symbol
+     * @param {DiscoveryNetwork} [network] Filter by network name
+     * @param {DiscoveryToken} [symbol] Filter by token symbol
      * @param {'true' | 'false'} [testnet] Filter testnet/mainnet tokens
      * @param {string} [tokenAddress] Filter by token contract address
      * @param {*} [options] Override http request option.

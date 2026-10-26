@@ -11,6 +11,8 @@ src/models/DailyRewardItem.ts
 src/models/DailyRewardsResponse.ts
 src/models/DelegationHistoryItem.ts
 src/models/DelegationHistoryResponse.ts
+src/models/DiscoveryNetwork.ts
+src/models/DiscoveryToken.ts
 src/models/Entity.ts
 src/models/ErrorResponse.ts
 src/models/EthereumCancelStake200Response.ts
@@ -29,6 +31,10 @@ src/models/EthereumForceExit200Response.ts
 src/models/EthereumForceExitRequest.ts
 src/models/EthereumForceExitResponse.ts
 src/models/EthereumGetDailyRewardsHistory200Response.ts
+src/models/EthereumGetQueue200Response.ts
+src/models/EthereumGetQueueResponse.ts
+src/models/EthereumGetQueueResponseEntry.ts
+src/models/EthereumGetQueueResponseExit.ts
 src/models/EthereumGetStakingTxHistory200Response.ts
 src/models/EthereumGetValidators200Response.ts
 src/models/EthereumGetValidatorsResponse.ts
