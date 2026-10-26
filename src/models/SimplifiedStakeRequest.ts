@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Anseta Developer API
- * Unified API for blockchain staking operations across multiple networks.
+ * API for creating unsigned staking transactions across multiple blockchain networks
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -57,7 +57,7 @@ export interface SimplifiedStakeRequest {
      * 
      * | Network Type | Format | Example |
      * |--------------|--------|---------|
-     * | **Cosmos networks (Mantra/Nillion/...)** | Bech32 address | mantra1234567890abcdefghijklmnopqrstuvwxyz123456 |
+     * | **Cosmos networks (Mantra/Injective/...)** | Bech32 address | mantra1234567890abcdefghijklmnopqrstuvwxyz123456 |
      * | **Solana** | Base58 encoded public key | updtkJ8HAhh3rSkBCd3p9Z1Q74yJW4rMhSbScRskDPM |
      * | **Cardano** | Bech32 address | addr1qx2kd4xkl38xkj2vh45jhk2l1kj3h4k5l6m7n8o9p0q1r2s3t4u5v6w7x8y9z0a1b2c3d4e5f6g7h8i9j0k1l2m3n4 |
      * | **EVM Networks (Polygon/Kaia/Somnia/...)** | 0x-prefixed hex address | 0x1234567890abcdef1234567890abcdef12345678 |
@@ -71,7 +71,7 @@ export interface SimplifiedStakeRequest {
      * 
      * | Network Type | Format | Example |
      * |--------------|--------|---------|
-     * | **Cosmos networks (Mantra/Nillion/...)** | Bech32 validator operator address | mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 |
+     * | **Cosmos networks (Mantra/Injective/...)** | Bech32 validator operator address | mantravaloper1234567890abcdefghijklmnopqrstuvwxyz123456 |
      * | **Solana** | Base58 encoded vote account address | he1iusunGwqrNtafDtLdhsUQDFvo13z9sUa36PauBtk |
      * | **Cardano** | Pool ID bech32 address | pool1pu5jlj4q9w9jlxeu370a3c9myx47md5j5... |
      * | **Polygon** | 0x-prefixed validator contract address | 0x26D1Ec50b4e62C1D1a40d16e7caD677311A5F2C5 |

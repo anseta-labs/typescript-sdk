@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Anseta Developer API
- * Unified API for blockchain staking operations across multiple networks.
+ * API for creating unsigned staking transactions across multiple blockchain networks
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -27,6 +27,7 @@ import type {
   EthereumForceExit200Response,
   EthereumForceExitRequest,
   EthereumGetDailyRewardsHistory200Response,
+  EthereumGetQueue200Response,
   EthereumGetStakingTxHistory200Response,
   EthereumGetValidators200Response,
   EthereumNetwork,
@@ -62,6 +63,8 @@ import {
     EthereumForceExitRequestToJSON,
     EthereumGetDailyRewardsHistory200ResponseFromJSON,
     EthereumGetDailyRewardsHistory200ResponseToJSON,
+    EthereumGetQueue200ResponseFromJSON,
+    EthereumGetQueue200ResponseToJSON,
     EthereumGetStakingTxHistory200ResponseFromJSON,
     EthereumGetStakingTxHistory200ResponseToJSON,
     EthereumGetValidators200ResponseFromJSON,
@@ -108,6 +111,10 @@ export interface EthereumGetDailyRewardsHistoryRequest {
     startDate?: string;
     endDate?: string;
     limit?: string;
+}
+
+export interface EthereumGetQueueRequest {
+    network: EthereumNetwork;
 }
 
 export interface EthereumGetStakingTxHistoryRequest {
@@ -245,6 +252,22 @@ export interface EthereumStakingApiInterface {
      * Rewards Daily History
      */
     ethereumGetDailyRewardsHistory(requestParameters: EthereumGetDailyRewardsHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumGetDailyRewardsHistory200Response>;
+
+    /**
+     * Current size of the beacon chain entry (deposit) and exit queues, with estimated wait times. The snapshot is refreshed about every minute; `updatedAt` says when it was taken.  `entry.waitSeconds` estimates how long a deposit made now takes to activate a new validator. `exit.waitSeconds` estimates how long an exit requested now takes to be processed; funds reach the withdrawal address after the withdrawal sweep that follows.
+     * @summary Get Queue
+     * @param {EthereumNetwork} network Target Ethereum network
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EthereumStakingApiInterface
+     */
+    ethereumGetQueueRaw(requestParameters: EthereumGetQueueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumGetQueue200Response>>;
+
+    /**
+     * Current size of the beacon chain entry (deposit) and exit queues, with estimated wait times. The snapshot is refreshed about every minute; `updatedAt` says when it was taken.  `entry.waitSeconds` estimates how long a deposit made now takes to activate a new validator. `exit.waitSeconds` estimates how long an exit requested now takes to be processed; funds reach the withdrawal address after the withdrawal sweep that follows.
+     * Get Queue
+     */
+    ethereumGetQueue(requestParameters: EthereumGetQueueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumGetQueue200Response>;
 
     /**
      * Delegation/deposit event history for a single Ethereum validator, sourced from the staking data indexer (BFF). Pubkey must be owned by the caller. Supports eventType and limit filters.
@@ -604,6 +627,49 @@ export class EthereumStakingApi extends runtime.BaseAPI implements EthereumStaki
      */
     async ethereumGetDailyRewardsHistory(requestParameters: EthereumGetDailyRewardsHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumGetDailyRewardsHistory200Response> {
         const response = await this.ethereumGetDailyRewardsHistoryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Current size of the beacon chain entry (deposit) and exit queues, with estimated wait times. The snapshot is refreshed about every minute; `updatedAt` says when it was taken.  `entry.waitSeconds` estimates how long a deposit made now takes to activate a new validator. `exit.waitSeconds` estimates how long an exit requested now takes to be processed; funds reach the withdrawal address after the withdrawal sweep that follows.
+     * Get Queue
+     */
+    async ethereumGetQueueRaw(requestParameters: EthereumGetQueueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EthereumGetQueue200Response>> {
+        if (requestParameters['network'] == null) {
+            throw new runtime.RequiredError(
+                'network',
+                'Required parameter "network" was null or undefined when calling ethereumGetQueue().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['network'] != null) {
+            queryParameters['network'] = requestParameters['network'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/ethereum-staking/queue`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EthereumGetQueue200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Current size of the beacon chain entry (deposit) and exit queues, with estimated wait times. The snapshot is refreshed about every minute; `updatedAt` says when it was taken.  `entry.waitSeconds` estimates how long a deposit made now takes to activate a new validator. `exit.waitSeconds` estimates how long an exit requested now takes to be processed; funds reach the withdrawal address after the withdrawal sweep that follows.
+     * Get Queue
+     */
+    async ethereumGetQueue(requestParameters: EthereumGetQueueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EthereumGetQueue200Response> {
+        const response = await this.ethereumGetQueueRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

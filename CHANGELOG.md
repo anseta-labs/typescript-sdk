@@ -9,6 +9,25 @@ version of the Anseta API.
 
 ## Unreleased
 
+### Added
+- ethereumGetQueue
+- DiscoveryNetwork
+- DiscoveryToken
+- EthereumGetQueueResponse
+- Network.injective
+
+### Removed
+- Network.nillion
+- Network.zenrock
+- Network.nillion-testnet
+- Network.zenrock-testnet
+- StakingNetwork.nillion
+- StakingNetwork.zenrock
+- StakingNetwork.nillion-testnet
+- StakingNetwork.zenrock-testnet
+- StakingToken.NILL
+- StakingToken.ROCK
+
 ## 0.2.0 - 2026-08-31
 
 ### Added

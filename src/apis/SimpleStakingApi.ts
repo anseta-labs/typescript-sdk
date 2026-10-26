@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Anseta Developer API
- * Unified API for blockchain staking operations across multiple networks.
+ * API for creating unsigned staking transactions across multiple blockchain networks
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -102,7 +102,7 @@ export interface GetValidatorsRequest {
  */
 export interface SimpleStakingApiInterface {
     /**
-     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **SOMI** | somnia | | **ROCK** | zenrock, zenrock-testnet |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
+     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **SOMI** | somnia |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
      * @summary Create staking transactions
      * @param {SimplifiedStakeRequest} simplifiedStakeRequest 
      * @param {*} [options] Override http request option.
@@ -112,7 +112,7 @@ export interface SimpleStakingApiInterface {
     createStakeRaw(requestParameters: CreateStakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionsResponse>>;
 
     /**
-     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **SOMI** | somnia | | **ROCK** | zenrock, zenrock-testnet |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
+     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **SOMI** | somnia |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
      * Create staking transactions
      */
     createStake(requestParameters: CreateStakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionsResponse>;
@@ -134,7 +134,7 @@ export interface SimpleStakingApiInterface {
     createStakingWithdrawal(requestParameters: CreateStakingWithdrawalOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionsResponse>;
 
     /**
-     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | 
      * @summary Create stake unstaking transactions
      * @param {SimplifiedStakeRequest} simplifiedStakeRequest 
      * @param {*} [options] Override http request option.
@@ -144,7 +144,7 @@ export interface SimpleStakingApiInterface {
     createUnstakeRaw(requestParameters: CreateUnstakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionsResponse>>;
 
     /**
-     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | 
      * Create stake unstaking transactions
      */
     createUnstake(requestParameters: CreateUnstakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionsResponse>;
@@ -187,7 +187,7 @@ export interface SimpleStakingApiInterface {
     getStakingDelegationHistory(requestParameters: GetStakingDelegationHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DelegationHistoryResponse>;
 
     /**
-     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | 
      * @summary Get staking positions
      * @param {string} staker The staker address to query stakes for
      * @param {StakingNetwork} network The blockchain network to query
@@ -200,7 +200,7 @@ export interface SimpleStakingApiInterface {
     getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakesResponse>>;
 
     /**
-     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | 
      * Get staking positions
      */
     getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakesResponse>;
@@ -247,7 +247,7 @@ export interface SimpleStakingApiInterface {
 export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingApiInterface {
 
     /**
-     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **SOMI** | somnia | | **ROCK** | zenrock, zenrock-testnet |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
+     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **SOMI** | somnia |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
      * Create staking transactions
      */
     async createStakeRaw(requestParameters: CreateStakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionsResponse>> {
@@ -280,7 +280,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
     }
 
     /**
-     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **SOMI** | somnia | | **ROCK** | zenrock, zenrock-testnet |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
+     *  Creates unsigned transactions for staking or delegation operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available staking combinations   | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **S** | sonic, sonic-testnet | | **KAIA** | kaia | | **MANTRA** | mantra, mantra-testnet | | **SOMI** | somnia |  **Notes:** - **Amount**: Amount is not required for Cardano. All balance is staked by protocol design. 
      * Create staking transactions
      */
     async createStake(requestParameters: CreateStakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionsResponse> {
@@ -331,7 +331,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
     }
 
     /**
-     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | 
      * Create stake unstaking transactions
      */
     async createUnstakeRaw(requestParameters: CreateUnstakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionsResponse>> {
@@ -364,7 +364,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
     }
 
     /**
-     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **NIL** | nillion, nillion-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Creates unsigned transactions for the staking unstaking operations across supported blockchain networks.  Address format, token denomination and some other parameters vary by network. Examples for each network are provided in the examples on the right panel.  ## Available Networks and Tokens  | Token | Network | |-------|---------| | **POL** | ethereum, ethereum-sepolia-testnet | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **SOMI** | somnia | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **MON** | monad, monad-testnet | 
      * Create stake unstaking transactions
      */
     async createUnstake(requestParameters: CreateUnstakeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionsResponse> {
@@ -471,7 +471,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
     }
 
     /**
-     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | 
      * Get staking positions
      */
     async getStakingPositionsRaw(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStakesResponse>> {
@@ -538,7 +538,7 @@ export class SimpleStakingApi extends runtime.BaseAPI implements SimpleStakingAp
     }
 
     /**
-     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | | **ROCK** | zenrock, zenrock-testnet | 
+     *  Returns the current staking positions for an address across supported networks.  ## Tokens and Networks  | Token | Network | |-------|---------| | **POL** | ethereum | | **SOL** | solana, solana-testnet | | **KAIA** | kaia | | **S** | sonic, sonic-testnet | | **MANTRA** | mantra, mantra-testnet | | **ADA** | cardano, cardano-testnet | | **APT** | aptos, aptos-testnet | | **NEAR** | near, near-testnet | 
      * Get staking positions
      */
     async getStakingPositions(requestParameters: GetStakingPositionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStakesResponse> {

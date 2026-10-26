@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Anseta Developer API
- * Unified API for blockchain staking operations across multiple networks.
+ * API for creating unsigned staking transactions across multiple blockchain networks
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -23,13 +23,11 @@ export const StakingNetwork = {
     Somnia: 'somnia',
     Monad: 'monad',
     Mantra: 'mantra',
-    Nillion: 'nillion',
     Kaia: 'kaia',
     Cardano: 'cardano',
     Sonic: 'sonic',
     Near: 'near',
     Aptos: 'aptos',
-    Zenrock: 'zenrock',
     SolanaTestnet: 'solana-testnet',
     SonicTestnet: 'sonic-testnet',
     SomniaTestnet: 'somnia-testnet',
@@ -37,10 +35,8 @@ export const StakingNetwork = {
     MantraTestnet: 'mantra-testnet',
     MonadTestnet: 'monad-testnet',
     HederaTestnet: 'hedera-testnet',
-    NillionTestnet: 'nillion-testnet',
     KaiaKairosTestnet: 'kaia-kairos-testnet',
-    CardanoTestnet: 'cardano-testnet',
-    ZenrockTestnet: 'zenrock-testnet'
+    CardanoTestnet: 'cardano-testnet'
 } as const;
 export type StakingNetwork = typeof StakingNetwork[keyof typeof StakingNetwork];
 
