@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Anseta Developer API
- * Unified API for blockchain staking operations across multiple networks.
+ * API for creating unsigned staking transactions across multiple blockchain networks
  *
  * The version of the OpenAPI document: 2.0.0
  * 
@@ -26,8 +26,7 @@ export const Network = {
     Chromia: 'chromia',
     BinanceSmartChain: 'binance-smart-chain',
     Mantra: 'mantra',
-    Nillion: 'nillion',
-    Zenrock: 'zenrock',
+    Injective: 'injective',
     Zetachain: 'zetachain',
     Cronos: 'cronos',
     Autonity: 'autonity',
@@ -60,10 +59,8 @@ export const Network = {
     AptosTestnet: 'aptos-testnet',
     SupraTestnet: 'supra-testnet',
     NearTestnet: 'near-testnet',
-    NillionTestnet: 'nillion-testnet',
     MantraTestnet: 'mantra-testnet',
     CardanoTestnet: 'cardano-testnet',
-    ZenrockTestnet: 'zenrock-testnet',
     ZetachainTestnet: 'zetachain-testnet',
     CronosTestnet: 'cronos-testnet',
     TezosGhostnetTestnet: 'tezos-ghostnet-testnet',
